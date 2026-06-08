@@ -1,0 +1,2169 @@
+<!DOCTYPE html>
+<!-- saved from url=(0068)file:///C:/Users/bowlong/claude_planning/guiyang-planning/index.html -->
+<html lang="zh-CN"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GY房地产项目经济技术指标计算器</title>
+<style>
+:root {
+  --bg: #f5f5f4; --card: #fff; --border: #e7e5e4;
+  --text: #1c1917; --muted: #78716c; --accent: #2563eb;
+  --green: #16a34a; --red: #dc2626; --amber: #d97706;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; max-width: 100%; overflow-x: hidden; }
+body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; -webkit-text-size-adjust: 100%; }
+.header { background: var(--card); border-bottom: 1px solid var(--border); position: fixed; top: 0; left: 0; right: 0; z-index: 999; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; box-shadow: 0 2px 10px rgba(15,23,42,0.06); }
+.header h1 { font-size: 1.2rem; font-weight: 700; }
+.header .sub { font-size: 0.75rem; color: var(--muted); }
+#mainContent { padding-top: var(--app-header-height, 0px); }
+.doc-link { border: 0; background: transparent; color: var(--accent); font-size: 0.65rem; font-weight: 400; cursor: pointer; padding: 0 2px; vertical-align: baseline; }
+.doc-link:hover { color: #1d4ed8; text-decoration: underline; }
+.manual-modal { position: fixed; inset: 0; background: rgba(28,25,23,0.48); z-index: 100000; display: flex; align-items: center; justify-content: center; padding: 24px; }
+.manual-panel { width: min(980px, 100%); max-height: 88vh; background: #fff; border-radius: 10px; box-shadow: 0 18px 60px rgba(0,0,0,0.28); display: flex; flex-direction: column; overflow: hidden; }
+.manual-head { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--border); }
+.manual-head h2 { margin: 0; font-size: 1rem; color: var(--text); }
+.manual-head span { color: var(--muted); font-size: 0.72rem; }
+.manual-close { margin-left: auto; border: 1px solid var(--border); background: #fff; border-radius: 6px; width: 30px; height: 30px; cursor: pointer; color: #44403c; font-size: 1rem; line-height: 1; }
+.manual-body { overflow: auto; padding: 18px; color: var(--text); font-size: 0.86rem; line-height: 1.75; }
+.manual-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+.manual-section { border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; background: #fafaf9; }
+.manual-section h3 { margin: 0 0 8px; font-size: 0.9rem; color: #292524; }
+.manual-section ul { margin: 0 0 0 18px; padding: 0; }
+.manual-section li { margin: 3px 0; }
+.facility-tools { display: flex; justify-content: flex-start; gap: 8px; margin-top: 8px; }
+.facility-btn { border: 1px solid #cbd5e1; background: #fff; color: #334155; border-radius: 8px; padding: 6px 10px; font-size: 0.75rem; cursor: pointer; }
+.facility-btn:hover { border-color: var(--accent); color: var(--accent); background: #eff6ff; }
+.facility-count-option { display: inline-flex; flex-direction: row; align-items: center; justify-content: center; gap: 5px; border: 1px solid #cbd5e1; background: #fff; color: #334155; border-radius: 8px; padding: 6px 10px; font-size: 0.75rem; line-height: 1; cursor: pointer; white-space: nowrap; min-height: 34px; min-width: 96px; }
+.facility-count-option input[type="checkbox"] { width: 14px; height: 14px; flex: 0 0 14px; margin: 0; padding: 0; }
+.facility-count-option span { display: inline-block; white-space: nowrap; flex: 0 0 auto; }
+.facility-count-option:hover { border-color: var(--accent); background: #eff6ff; }
+.facility-panel { width: min(1180px, 100%); height: min(88vh, 820px); background: #fff; border-radius: 10px; box-shadow: 0 18px 60px rgba(0,0,0,0.28); display: flex; flex-direction: column; overflow: hidden; }
+.facility-body { min-height: 0; flex: 1; display: flex; flex-direction: column; padding: 14px 18px; overflow: hidden; }
+.facility-toolbar { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+.facility-toolbar .msg { flex: 1 1 220px; }
+.facility-help { flex: 0 0 auto; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 6px 10px; padding: 8px 10px; margin-bottom: 10px; border: 1px solid #bfdbfe; border-radius: 8px; background: #eff6ff; color: #1e3a8a; font-size: 0.7rem; line-height: 1.45; }
+.facility-help b { color: #1e40af; font-weight: 700; }
+.facility-table-wrap { flex: 1 1 auto; min-height: 0; overflow: auto; border: 1px solid var(--border); border-radius: 8px; }
+.facility-table { width: 100%; min-width: 1280px; border-collapse: collapse; font-size: 0.72rem; }
+.facility-table th { position: sticky; top: 0; z-index: 2; background: #f5f3f0; color: #44403c; border-bottom: 1px solid var(--border); padding: 6px 5px; text-align: center; white-space: nowrap; }
+.facility-table td { border-bottom: 1px solid #f1f5f9; padding: 4px; vertical-align: middle; }
+.facility-table tr.facility-source-0 td { background: #f8fafc; }
+.facility-table tr.facility-source-1 td { background: #eff6ff; }
+.facility-table tr.facility-source-2 td { background: #f0fdf4; }
+.facility-table tr.facility-source-3 td { background: #fffbeb; }
+.facility-table tr.facility-source-4 td { background: #fdf2f8; }
+.facility-table tr.facility-source-5 td { background: #f5f3ff; }
+.facility-table tr.facility-source-6 td { background: #ecfeff; }
+.facility-table tr.facility-source-7 td { background: #fff7ed; }
+.facility-table input, .facility-table select { border-radius: 5px; padding: 5px 6px; font-size: 0.72rem; min-width: 0; }
+.facility-table tr[class*="facility-source-"] input, .facility-table tr[class*="facility-source-"] select { background: rgba(255,255,255,0.82); }
+.facility-table input[type="checkbox"] { width: auto; }
+.facility-table .num { width: 70px; text-align: right; }
+.facility-table .short { width: 90px; }
+.facility-table .mid { width: 130px; }
+.facility-table .long { width: 190px; }
+main { max-width: 1400px; width: 100%; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: minmax(0, 440px) minmax(0, 1fr); gap: 20px; }
+main > div, #mainContent, #resultArea, #hpArea, #buildingAnalysisArea, #projectCalcArea { min-width: 0; max-width: 100%; }
+@media (max-width: 900px) { main { grid-template-columns: minmax(0, 1fr); } }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px; min-width: 0; max-width: 100%; }
+.card h2 { font-size: 1rem; margin-bottom: 14px; color: #292524; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-grid .full { grid-column: 1 / -1; }
+label { display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; color: var(--muted); }
+input, select { border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; font-size: 0.85rem; outline: none; width: 100%; background: #fff; }
+input:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+input[type="checkbox"] { width: auto; accent-color: var(--accent); }
+.checkbox-row { flex-direction: row; align-items: center; gap: 8px; }
+.flex-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.preset-btn { padding: 4px 12px; font-size: 0.75rem; border: 1px solid var(--border); border-radius: 20px; background: #fff; color: var(--muted); cursor: pointer; transition: all 0.15s; }
+.preset-btn:hover { background: #f5f5f4; color: var(--text); }
+.btn { padding: 10px 20px; border: none; border-radius: 10px; font-size: 0.9rem; cursor: pointer; transition: all 0.15s; }
+.btn-primary { background: var(--accent); color: #fff; width: 100%; }
+.btn-primary:hover { background: #1d4ed8; }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-green { background: var(--green); color: #fff; }
+.btn-green:hover { background: #15803d; }
+.btn-red { background: #fff; color: var(--red); border: 1px solid var(--red); font-size: 0.7rem; padding: 2px 8px; }
+.btn-red:hover { background: #fef2f2; }
+.warn-box { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 10px 14px; font-size: 0.75rem; color: var(--amber); }
+.error-box { background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 10px 14px; font-size: 0.8rem; color: var(--red); }
+.msg { font-size: 0.75rem; color: var(--muted); }
+.save-row { display: flex; gap: 8px; margin-top: 8px; }
+.save-row input { flex: 1; }
+.proj-list { max-height: 180px; overflow-y: auto; margin-top: 8px; }
+.proj-item { display: flex; justify-content: space-between; align-items: center; padding: 6px 4px; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+.proj-item:last-child { border-bottom: 0; }
+.proj-item .name { color: var(--text); cursor: pointer; }
+.proj-item .name:hover { color: var(--accent); }
+.proj-item .time { font-size: 0.7rem; color: var(--muted); }
+/* indicator table */
+.indicator-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; table-layout: fixed; }
+.indicator-table th { background: #e8ecf0; color: #1c1917; font-weight: 700; padding: 7px 5px; border: 1px solid #c5c1bc; text-align: center; font-size: 0.8rem; }
+.indicator-table td { padding: 4px 5px; border: 1px solid #c5c1bc; vertical-align: middle; }
+.indicator-table td[colspan], .indicator-table td[rowspan] { text-align: center; }
+.indicator-table .col-A { text-align: center; min-width: 120px; }
+.indicator-table .col-B { text-align: center; width: 36px; color: #57534e; font-size: 0.78rem; }
+.indicator-table .col-C { text-align: center; min-width: 110px; }
+.indicator-table .col-D { text-align: center !important; min-width: 135px; font-variant-numeric: tabular-nums; }
+.indicator-table .col-E { text-align: center; width: 60px; color: var(--muted); font-size: 0.75rem; }
+.indicator-table .col-F { text-align: left; color: var(--muted); font-size: 0.72rem; }
+.indicator-table .row-section td { font-weight: 700; background: #f5f3f0; }
+.indicator-table .row-sub td.col-A { padding-left: 16px; }
+.indicator-table td[colspan], .indicator-table td[rowspan] { text-align: center; }
+.indicator-table tbody tr:hover { background: #fafdfe; }
+.indicator-table tbody tr.row-section:hover { background: #f5f3f0; }
+.empty-state { text-align: center; color: var(--muted); padding: 60px 20px; font-size: 0.9rem; }
+.top-actions { display: flex; gap: clamp(0px, 1vw, 8px); flex-wrap: wrap; margin-left: auto; }
+.collapse-btn { font-size: 0.8rem; color: #44403c; cursor: pointer; border: none; background: none; }
+.collapse-btn:hover { color: #1c1917; }
+.mu-hint { font-size: 0.7rem; color: #a8a29e; margin-top: -2px; }
+.product-subtitle { font-size: 0.7rem; color: #a8a29e; margin-bottom: 6px; }
+.prod-table { width: 100%; border-collapse: collapse; font-size: 0.73rem; }
+.prod-table th { background: #f5f3f0; color: #78716c; padding: 4px 4px; border-bottom: 1px solid #e7e5e4; font-size: 0.68rem; text-align: center; }
+.prod-table td { padding: 3px 4px; border-bottom: 1px solid #fafaf9; vertical-align: middle; }
+.prod-table .th-name, .prod-table .td-name { text-align: left; width: 72px; color: #44403c; font-weight: 500; font-size: 0.74rem; }
+.prod-table .td-name.sub { padding-left: 12px; font-size: 0.72rem; }
+.prod-table .th-pct, .prod-table .td-pct { text-align: center; width: 62px; white-space: nowrap; }
+.prod-table .td-pct input { width: 62px; padding: 5px 6px; font-size: 0.78rem; text-align: center; border: 1px solid var(--border); border-radius: 4px; }
+.prod-table .td-pct span { font-size: 0.72rem; color: var(--muted); }
+.prod-table .th-area, .prod-table .td-area { text-align: right; width: 90px; color: var(--muted); font-size: 0.74rem; }
+.prod-table .th-unit, .prod-table .td-unit { text-align: center; width: 62px; white-space: nowrap; }
+.prod-table .td-unit input { width: 62px; padding: 5px 6px; font-size: 0.78rem; text-align: center; border: 1px solid var(--border); border-radius: 4px; }
+.prod-table .td-unit span { font-size: 0.7rem; color: var(--muted); }
+.prod-table .th-units, .prod-table .td-units { text-align: right; width: 70px; color: var(--muted); font-size: 0.72rem; }
+.product-sum { font-size: 0.72rem; margin-top: 6px; }
+.product-sum.ok { color: var(--green); }
+.product-sum.warn { color: var(--red); }
+#hpArea .prod-table td { text-align: center; }
+#hpArea .prod-table th { text-align: center; background: #fce4e4; border: 1px solid #ddd; }
+#hpArea .prod-table td { text-align: center; border: 1px solid #ddd; }
+.school-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; font-size: 0.75rem; justify-content: flex-start; } .school-row .checkbox-row { width: 72px; display: inline-flex; align-items: center; }
+.school-param { display: flex; align-items: center; gap: 3px; color: var(--muted); font-size: 0.72rem; }
+.school-param input { width: 42px; padding: 3px 4px; font-size: 0.72rem; text-align: center; border: 1px solid var(--border); border-radius: 4px; -moz-appearance: textfield; appearance: textfield; }
+.school-param input::-webkit-outer-spin-button, .school-param input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.section-block { background: #fafaf7; border: 1px solid #ece8e0; border-radius: 10px; padding: 12px; margin-bottom: 12px; }
+@media (max-width: 640px) {
+  .header { padding: 12px; align-items: stretch; }
+  .header > div:first-child, .top-actions { width: 100%; min-width: 0; margin-left: 0; }
+  .header h1 { font-size: 1rem; line-height: 1.35; }
+  .header .sub { font-size: 0.68rem; }
+  .manual-modal { padding: 10px; align-items: stretch; }
+  .manual-panel { max-height: calc(100vh - 20px); }
+  .facility-panel { max-height: calc(100vh - 20px); }
+  .facility-body { padding: 10px; }
+  .facility-help { grid-template-columns: minmax(0, 1fr); font-size: 0.68rem; }
+  .manual-body { padding: 12px; font-size: 0.8rem; }
+  .manual-grid { grid-template-columns: minmax(0, 1fr); }
+  .top-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+  .top-actions .btn { width: 100% !important; min-width: 0 !important; margin-right: 0 !important; padding: 8px 6px !important; font-size: 0.78rem !important; }
+  .top-actions #exportBtn { grid-column: span 2; }
+  main { padding: 10px; gap: 10px; }
+  .card { padding: 10px; border-radius: 8px; overflow-x: auto; }
+  .card h2 { font-size: 0.92rem; line-height: 1.35; overflow-wrap: anywhere; }
+  .section-block { padding: 10px; border-radius: 8px; overflow-x: auto; }
+  .form-grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .checkbox-row.full > div { flex-wrap: wrap; white-space: normal !important; }
+  .save-row { flex-direction: column; }
+  .school-row { flex-wrap: wrap; align-items: flex-start; gap: 6px; }
+  .school-row .checkbox-row { width: auto; min-width: 72px; }
+  .school-param { flex: 1 1 96px; min-width: 0; }
+  .school-param input { max-width: 100%; }
+  .prod-table { min-width: 380px; }
+  .indicator-table { min-width: 620px; font-size: 0.74rem; }
+  .indicator-table th, .indicator-table td { padding: 4px 3px; overflow-wrap: anywhere; }
+  .indicator-table .col-A, .indicator-table .col-C, .indicator-table .col-D { min-width: 0; }
+}
+</style>
+<script>
+(function() {
+  var AUTH_KEY = 'guiyang_planning_login_token';
+  try {
+    var params = new URLSearchParams(window.location.search);
+    var token = params.get('token') || '';
+    var stored = sessionStorage.getItem(AUTH_KEY) || '';
+    if (!token || !stored || token !== stored) {
+      window.location.replace('login');
+      return;
+    }
+    sessionStorage.removeItem(AUTH_KEY);
+    if (window.history && window.history.replaceState) {
+      window.history.replaceState(null, '', './');
+    }
+  } catch (e) {
+    window.location.replace('login');
+  }
+})();
+</script>
+</head>
+<body>
+
+<script>
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    hideUserManual();
+    hideFacilityManager();
+    return;
+  }
+  if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || (e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.key === 's')) {
+    e.preventDefault();
+    return false;
+  }
+});
+
+function manualSection(title, items) {
+  var h = '<section class="manual-section"><h3>' + title + '</h3><ul>';
+  for (var i = 0; i < items.length; i++) h += '<li>' + items[i] + '</li>';
+  return h + '</ul></section>';
+}
+
+function showUserManual() {
+  hideUserManual();
+  var modal = document.createElement('div');
+  modal.id = 'userManualModal';
+  modal.className = 'manual-modal';
+  modal.onclick = function(e) { if (e.target === modal) hideUserManual(); };
+  var sections = [
+    manualSection('1. 登录与入口', [
+      '打开登录页输入密码后进入主界面。',
+      '主界面顶部提供产品配置、楼栋分析、项目测算、计算指标、导出 Excel 等入口。'
+    ]),
+    manualSection('2. 项目规划条件', [
+      '录入所属区域、项目名称、总用地面积、建设用地面积、平衡用地面积等基础指标。',
+      '设置容积率、建筑密度、绿地率、建筑高度、住宅/商业占比等规划控制条件。',
+      '页面会自动换算亩数，并联动后续经济技术指标、产品配置和测算模块。'
+    ]),
+    manualSection('3. 产品配置', [
+      '配置 T4、T3、T2、小高层、洋房、别墅等住宅产品比例、面积和户均面积。',
+      '配置裙楼商业、集中商业、商业综合楼等商业比例。',
+      '系统自动汇总产品面积、户数，并提示产品比例是否匹配。'
+    ]),
+    manualSection('4. 配套与停车', [
+      '按人口、户数、计容面积自动测算公共配套，并支持勾选学校和自定义配套。',
+      '停车位按住宅、商业、配套、地上/地下、人防/非人防等口径计算。',
+      '非机动车停车位和地下建筑面积会进入经济技术指标表。'
+    ]),
+    manualSection('5. 经济技术指标表', [
+      '点击“计算指标”生成完整经济技术指标表。',
+      '表格展示用地、建筑面积、容积率、建筑密度、绿地率、建筑高度、停车位、户数、人数等指标。',
+      '点击“返回指标”可回到输入状态；点击“导出 Excel”可导出指标表。'
+    ]),
+    manualSection('6. 楼栋分析', [
+      '点击“楼栋分析”查看按产品类型拆分后的楼栋、户数、建筑面积和停车需求分析。',
+      '用于校验产品配置与规划指标之间的匹配关系。',
+      '数据随规划条件和产品配置变化自动联动刷新。'
+    ]),
+    manualSection('7. 项目测算', [
+      '点击“项目测算”生成项目货值、直接成本、项目费用、利润和敏感性分析。',
+      '可调整住宅/商业/车位售价、去化率、土地楼面价、建安成本、销售费率、管理费率、融资成本等参数。',
+      '测算表中的税费、利润率、敏感性分析会随输入变化联动更新。'
+    ]),
+    manualSection('8. 税费测算与税筹', [
+      '税费测算覆盖增值税、附加、土地增值税、印花税、所得税和税费合计。',
+      '可勾选“采用预估税率”，在税费合计后显示差异金额和比例，不直接覆盖明细税费口径。',
+      '“税筹建议”会根据取票率、土地成本占比、建安成本占比、增值率和跳档风险生成提示。',
+      '“模拟优化”会在保证收益率的基础上尝试调整单价和成本，辅助规避土增税跳档。'
+    ]),
+    manualSection('9. 图片生成与测算说明', [
+      '项目测算模块右侧“生成测算简报”会先弹出图片预览，不直接下载。',
+      '预览窗口提供复制、保存和“测算说明”编辑入口。',
+      '测算说明会根据当前测算数据自动生成，可手动修改，并显示在图片表头上方。'
+    ]),
+    manualSection('10. 项目管理', [
+      '项目管理可保存当前输入方案，并在本机浏览器中读取历史项目。',
+      '支持导出备份和导入备份，便于迁移或留档。',
+      '数据保存在当前浏览器本地，清理浏览器数据可能导致项目记录丢失。'
+    ])
+  ];
+  modal.innerHTML =
+    '<div class="manual-panel">' +
+      '<div class="manual-head">' +
+        '<h2>使用文档</h2>' +
+        '<span>GY房地产项目经济技术指标计算器 V2.0</span>' +
+        '<button type="button" class="manual-close" aria-label="关闭" onclick="hideUserManual()">×</button>' +
+      '</div>' +
+      '<div class="manual-body"><div class="manual-grid">' + sections.join('') + '</div></div>' +
+    '</div>';
+  document.body.appendChild(modal);
+}
+
+function hideUserManual() {
+  var modal = document.getElementById('userManualModal');
+  if (modal && modal.parentNode) modal.parentNode.removeChild(modal);
+}
+
+function syncFixedHeaderSpace() {
+  var header = document.querySelector('#mainContent > .header');
+  if (!header) return;
+  document.documentElement.style.setProperty('--app-header-height', header.offsetHeight + 'px');
+}
+
+function scrollToModule(target) {
+  var el = typeof target === 'string' ? document.getElementById(target) : target;
+  if (!el) return;
+  setTimeout(function() {
+    var header = document.querySelector('#mainContent > .header');
+    var headerHeight = header ? header.offsetHeight : 0;
+    var top = el.getBoundingClientRect().top + window.pageYOffset - headerHeight - 12;
+    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+  }, 0);
+}
+
+window.addEventListener('resize', syncFixedHeaderSpace);
+window.addEventListener('load', syncFixedHeaderSpace);
+if (typeof ResizeObserver !== 'undefined') {
+  window.addEventListener('DOMContentLoaded', function() {
+    var header = document.querySelector('#mainContent > .header');
+    if (header) new ResizeObserver(syncFixedHeaderSpace).observe(header);
+    syncFixedHeaderSpace();
+  });
+} else {
+  window.addEventListener('DOMContentLoaded', syncFixedHeaderSpace);
+}
+
+var facilityDraftRules = [];
+
+function facilityOption(value, label, current) {
+  return '<option value="' + value + '"' + (value === current ? ' selected' : '') + '>' + label + '</option>';
+}
+
+function facilityInput(cls, value, extra) {
+  return '<input class="' + cls + '" value="' + facilityEsc(value == null ? '' : value) + '"' + (extra || '') + '>';
+}
+
+function facilitySelect(cls, current, options) {
+  var h = '<select class="' + cls + '">';
+  for (var i = 0; i < options.length; i++) h += facilityOption(options[i][0], options[i][1], current);
+  return h + '</select>';
+}
+
+function facilityEsc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+async function showFacilityManager() {
+  hideFacilityManager();
+  if (typeof getFacilityRules !== 'function') {
+    alert('配套规则库未加载，请检查 facilities.js');
+    return;
+  }
+  if (typeof loadFacilityRulesFromJson === 'function') {
+    await loadFacilityRulesFromJson('facility.json');
+  }
+  facilityDraftRules = getFacilityRules();
+  var modal = document.createElement('div');
+  modal.id = 'facilityManagerModal';
+  modal.className = 'manual-modal';
+  modal.onclick = function(e) { if (e.target === modal) hideFacilityManager(); };
+  modal.innerHTML =
+    '<div class="facility-panel">' +
+      '<div class="manual-head">' +
+        '<h2>配套数据维护</h2>' +
+        '<span>规则可保存到当前浏览器，也可通过 facility.json 备份和迁移</span>' +
+        '<button type="button" class="manual-close" aria-label="关闭" onclick="hideFacilityManager()">×</button>' +
+      '</div>' +
+      '<div class="facility-body">' +
+        '<div class="facility-toolbar">' +
+          '<button type="button" class="facility-btn" onclick="addFacilityRule()">新增</button>' +
+          '<button type="button" class="facility-btn" onclick="saveFacilityManager()">保存并重算</button>' +
+          '<button type="button" class="facility-btn" onclick="exportFacilityJsonFile()">导出 facility.json 文件</button>' +
+          '<button type="button" class="facility-btn" onclick="restoreDefaultFacilityRules()">恢复默认</button>' +
+          '<span class="msg" id="facilityMsg">面积类型：固定、步进、比例、物业公式。最大值填 0 表示不设上限。</span>' +
+        '</div>' +
+        '<div class="facility-help">' +
+          '<div><b>启用</b>：取消勾选则不参与计算。</div>' +
+          '<div><b>分组/依据</b>：分组用于归类；依据用于显示政策来源并按来源上色。</div>' +
+          '<div><b>匹配</b>：累计=达到下限即加入；单档=同类只取最高档；总是=不看门槛。</div>' +
+          '<div><b>指标</b>：选择人口、户数、总计容、商业面积或人口/户数；下限、户数下限、上限用于判断是否匹配。</div>' +
+          '<div><b>面积类型</b>：固定、步进、比例、物业公式。</div>' +
+          '<div><b>基础指标</b>：面积计算使用的人口、户数、总计容或商业面积。</div>' +
+          '<div><b>固定/比例</b>：固定类型填固定面积；比例类型填乘数，如0.003。</div>' +
+          '<div><b>步长</b>：步进类型的分母，如3000人、600户、10000㎡。</div>' +
+          '<div><b>单步面积</b>：每个步长对应面积；步进公式=ceil(基础指标/步长)*单步面积。</div>' +
+          '<div><b>导出</b>：导出的是当前编辑内容；需要将该 facility.json 文件更新到服务器端，线上页面重新读取后才会生效。</div>' +
+        '</div>' +
+        '<div class="facility-table-wrap">' +
+          '<table class="facility-table">' +
+            '<thead><tr><th>启用</th><th>分组</th><th>依据</th><th>匹配</th><th>指标</th><th>人口/指标下限</th><th>户数下限</th><th>上限</th><th>配套名称</th><th>面积类型</th><th>基础指标</th><th>固定/比例</th><th>步长</th><th>单步面积</th><th>备注</th><th>操作</th></tr></thead>' +
+            '<tbody id="facilityRows"></tbody>' +
+          '</table>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  document.body.appendChild(modal);
+  renderFacilityRows();
+  var msg = document.getElementById('facilityMsg');
+  if (typeof FACILITY_JSON_LOAD_ERROR !== 'undefined' && FACILITY_JSON_LOAD_ERROR) {
+    if (msg) { msg.textContent = FACILITY_JSON_LOAD_ERROR + '，当前显示兜底规则。'; msg.style.color = 'var(--red)'; }
+  } else if (msg) {
+    var sourceText = (typeof FACILITY_RULE_SOURCE !== 'undefined' && FACILITY_RULE_SOURCE === 'facility.json') ? 'facility.json' :
+      ((typeof FACILITY_RULE_SOURCE !== 'undefined' && FACILITY_RULE_SOURCE === 'localStorage') ? '浏览器保存规则' : '默认规则');
+    msg.textContent = '当前数据来源：' + sourceText + '，共 ' + facilityDraftRules.length + ' 条规则。';
+    msg.style.color = 'var(--muted)';
+  }
+}
+
+function hideFacilityManager() {
+  var modal = document.getElementById('facilityManagerModal');
+  if (modal && modal.parentNode) modal.parentNode.removeChild(modal);
+}
+
+function renderFacilityRows() {
+  var body = document.getElementById('facilityRows');
+  if (!body) return;
+  var rows = [];
+  var sourceColors = {};
+  var sourceColorCount = 0;
+  for (var i = 0; i < facilityDraftRules.length; i++) {
+    var r = facilityDraftRules[i] || {};
+    var sourceKey = String(r.source || '未填写依据').trim() || '未填写依据';
+    if (sourceColors[sourceKey] == null) sourceColors[sourceKey] = sourceColorCount++ % 8;
+    var sourceClass = 'facility-source-' + sourceColors[sourceKey];
+    rows.push(
+      '<tr data-index="' + i + '" class="' + sourceClass + '">' +
+        '<td style="text-align:center"><input class="enabled" type="checkbox"' + (r.enabled !== false ? ' checked' : '') + '></td>' +
+        '<td>' + facilityInput('group mid', r.group) + '</td>' +
+        '<td>' + facilityInput('source mid', r.source, ' oninput="refreshFacilityRowColors()"') + '</td>' +
+        '<td>' + facilitySelect('matchMode short', r.matchMode, [['cascade','累计'],['single','单档'],['always','总是']]) + '</td>' +
+        '<td>' + facilitySelect('metric short', r.metric, [['population','人口'],['totalUnits','户数'],['totalFar','总计容'],['comArea','商业面积'],['populationOrUnits','人口或户数'],['always','总是']]) + '</td>' +
+        '<td>' + facilityInput('min num', r.min, ' type="number"') + '</td>' +
+        '<td>' + facilityInput('minUnits num', r.minUnits, ' type="number"') + '</td>' +
+        '<td>' + facilityInput('max num', r.max, ' type="number"') + '</td>' +
+        '<td>' + facilityInput('name mid', r.name) + '</td>' +
+        '<td>' + facilitySelect('areaType short', r.areaType, [['fixed','固定'],['step','步进'],['ratio','比例'],['property','物业公式']]) + '</td>' +
+        '<td>' + facilitySelect('baseMetric short', r.baseMetric, [['population','人口'],['totalUnits','户数'],['totalFar','总计容'],['comArea','商业面积']]) + '</td>' +
+        '<td>' + facilityInput('value num', r.areaType === 'ratio' ? (r.ratio || r.value || 0) : r.value, ' type="number" step="0.0001"') + '</td>' +
+        '<td>' + facilityInput('step num', r.step, ' type="number"') + '</td>' +
+        '<td>' + facilityInput('areaPerStep num', r.areaPerStep, ' type="number"') + '</td>' +
+        '<td>' + facilityInput('note long', r.note) + '</td>' +
+        '<td style="text-align:center"><button type="button" class="btn btn-red" onclick="deleteFacilityRule(' + i + ')">删</button></td>' +
+      '</tr>'
+    );
+  }
+  body.innerHTML = rows.join('');
+}
+
+function refreshFacilityRowColors() {
+  var rows = document.querySelectorAll('#facilityRows tr');
+  var sourceColors = {};
+  var sourceColorCount = 0;
+  for (var i = 0; i < rows.length; i++) {
+    var tr = rows[i];
+    for (var c = 0; c < 8; c++) tr.classList.remove('facility-source-' + c);
+    var sourceEl = tr.querySelector('.source');
+    var sourceKey = sourceEl ? String(sourceEl.value || '未填写依据').trim() : '未填写依据';
+    if (!sourceKey) sourceKey = '未填写依据';
+    if (sourceColors[sourceKey] == null) sourceColors[sourceKey] = sourceColorCount++ % 8;
+    tr.classList.add('facility-source-' + sourceColors[sourceKey]);
+  }
+}
+
+function readFacilityRows() {
+  var rows = document.querySelectorAll('#facilityRows tr');
+  var out = [];
+  for (var i = 0; i < rows.length; i++) {
+    var tr = rows[i];
+    function val(cls) {
+      var el = tr.querySelector('.' + cls);
+      return el ? el.value : '';
+    }
+    function num(cls) {
+      var n = parseFloat(val(cls));
+      return isNaN(n) ? 0 : n;
+    }
+    var areaType = val('areaType') || 'fixed';
+    var v = num('value');
+    out.push({
+      id: (facilityDraftRules[i] && facilityDraftRules[i].id) || ('rule_' + Date.now() + '_' + i),
+      enabled: !!(tr.querySelector('.enabled') && tr.querySelector('.enabled').checked),
+      group: val('group') || '自定义配套',
+      source: val('source') || '',
+      matchMode: val('matchMode') || 'cascade',
+      metric: val('metric') || 'population',
+      min: num('min'),
+      minUnits: num('minUnits'),
+      max: num('max'),
+      name: val('name') || '未命名配套',
+      areaType: areaType,
+      baseMetric: val('baseMetric') || 'population',
+      value: v,
+      ratio: areaType === 'ratio' ? v : 0,
+      step: num('step'),
+      areaPerStep: num('areaPerStep'),
+      note: val('note')
+    });
+  }
+  return out;
+}
+
+function addFacilityRule() {
+  facilityDraftRules = readFacilityRows();
+  facilityDraftRules.push({
+    id: 'rule_' + Date.now(),
+    enabled: true,
+    group: '自定义配套',
+    source: '',
+    matchMode: 'cascade',
+    metric: 'population',
+    min: 0,
+    max: 0,
+    minUnits: 0,
+    name: '新增配套',
+    areaType: 'fixed',
+    baseMetric: 'population',
+    value: 0,
+    step: 0,
+    areaPerStep: 0,
+    ratio: 0,
+    note: ''
+  });
+  renderFacilityRows();
+}
+
+function deleteFacilityRule(index) {
+  facilityDraftRules = readFacilityRows();
+  var rule = facilityDraftRules[index] || {};
+  var name = rule.name || '该配套规则';
+  if (!confirm('确定删除“' + name + '”？')) return;
+  facilityDraftRules.splice(index, 1);
+  renderFacilityRows();
+}
+
+function saveFacilityManager() {
+  try {
+    facilityDraftRules = readFacilityRows();
+    saveFacilityRules(facilityDraftRules);
+    var msg = document.getElementById('facilityMsg');
+    if (msg) { msg.textContent = '已保存到当前浏览器，共 ' + facilityDraftRules.length + ' 条规则，并重新计算当前指标。'; msg.style.color = 'var(--green)'; }
+    if (window._lastResult) calculate();
+  } catch (e) {
+    alert('保存失败：' + e.message);
+  }
+}
+
+function restoreDefaultFacilityRules() {
+  if (!confirm('确定清除当前浏览器保存的维护数据？清除后将优先使用 facility.json，读取失败才使用默认规则。')) return;
+  resetFacilityRules();
+  facilityDraftRules = getFacilityRules();
+  renderFacilityRows();
+  var msg = document.getElementById('facilityMsg');
+  if (msg) { msg.textContent = '已清除浏览器保存规则，当前弹窗显示兜底规则；刷新页面后会优先读取 facility.json。'; msg.style.color = 'var(--accent)'; }
+  if (window._lastResult) calculate();
+}
+
+function exportFacilityJsonFile() {
+  facilityDraftRules = readFacilityRows();
+  var payload = {
+    version: 1,
+    updatedAt: new Date().toISOString(),
+    rules: facilityDraftRules
+  };
+  var blob = new Blob([JSON.stringify(payload, null, 2)], {type: 'application/json;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'facility.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  var msg = document.getElementById('facilityMsg');
+  if (msg) { msg.textContent = '已导出当前编辑内容，无需先保存。'; msg.style.color = 'var(--green)'; }
+}
+
+async function initFacilityRulesFromJson() {
+  if (typeof loadFacilityRulesFromJson !== 'function') return;
+  var loaded = await loadFacilityRulesFromJson('facility.json');
+  if (loaded && window._lastResult && typeof calculate === 'function') calculate();
+}
+
+</script>
+
+<div id="mainContent">
+
+<div class="header">
+  <div>
+    <h1>GY房地产项目经济技术指标计算器 <span style="font-size:0.65rem;font-weight:400;color:#a8a29e">【 by：ZY | ver：V2.0 】</span><button type="button" class="doc-link" onclick="showUserManual()">【使用文档】</button></h1>
+    <div class="sub">基于《贵阳市城市规划管理技术规定（试行）》2024版</div>
+  </div>
+  <div class="top-actions">
+    <button class="btn" onclick="toggleHP()" style="padding:8px 12px;font-size:0.85rem;background:#fce4e4;color:#7c3aed;flex:2;min-width:0">产品配置</button>
+    <button class="btn" onclick="toggleBuildingAnalysis()" style="padding:8px 12px;font-size:0.85rem;background:#e8f0fe;color:#2563eb;flex:2;min-width:0">楼栋分析</button>
+    <button class="btn" onclick="toggleProjectCalc()" style="padding:8px 12px;font-size:0.85rem;background:#f0fdf4;color:#16a34a;flex:2;min-width:0">项目测算</button>
+    <button class="btn btn-primary" id="calcBtn" onclick="toggleCalculate()" style="padding:8px 12px;font-size:0.85rem;flex:2;width:auto;min-width:0;margin-right:clamp(0px, 5vw, 80px)">计算指标</button>
+    <button class="btn btn-green" onclick="exportExcel()" id="exportBtn" style="padding:8px 12px;font-size:0.85rem;flex:1;min-width:0">导出 Excel</button>
+  </div>
+</div>
+
+<main>
+  <!-- ===== 左侧输入面板 ===== -->
+  <div style="display:flex;flex-direction:column;gap:16px">
+
+    <!-- 规划条件 -->
+    <div class="card">
+      <h2>项目规划条件</h2>
+      <div class="section-block" style="background:#f0f4fa;border-color:#d4dff0">
+<h3 style="font-size:0.8rem;font-weight:700;color:#57534e;margin:-8px 0 12px 0">用地规划指标</h3>
+      <div class="form-grid">
+        <label>所属区域
+          <select id="district">
+            <option value="" selected="">请选择</option>
+            <option value="nanming">南明区</option>
+            <option value="yunyan">云岩区</option>
+            <option value="guanshanhu">观山湖区</option>
+            <option value="huaxi">花溪区</option>
+            <option value="baiyun">白云区</option>
+            <option value="jingkai">经开区</option>
+            <option value="gaoxin">高新区</option>
+            <option value="other">其它区域</option>
+          </select>
+        </label>
+        <label>项目名称<input id="project_name" type="text" placeholder="输入项目名称"></label>
+        <label>总用地面积 (㎡)<input id="land_area" type="number" value="50000"><span id="land_mu" class="mu-hint">≈75.00亩</span></label>
+        <label>建设用地面积 (㎡)<input id="construction_land_area" type="number" value="50000"><span id="build_mu" class="mu-hint">≈75.00亩</span></label>
+        <label>平衡指标用地面积 (㎡)<input id="balance_land_area" type="number" value="0"><span id="balance_mu" class="mu-hint"></span></label>
+        <label>容积率<input id="far" type="number" step="0.1" value="2.5"><span id="far_hint" class="mu-hint">≈125,000㎡</span></label>
+        <label>商业比例 (%)<input id="planned_commercial_ratio" type="number" value="10"></label>
+        <label>建筑限高 (m)<input id="height_limit" type="number" value="80"></label>
+        <label>建筑密度 (%)<input id="building_density" type="number" value="22"></label>
+        <label>绿地率 (%)<input id="green_ratio" type="number" value="35"></label>
+        <label class="checkbox-row full">
+          <div style="display:flex;align-items:center;gap:8px;font-size:0.8rem;color:var(--muted);white-space:nowrap"><span>户均人口</span><label class="checkbox-row"><input type="radio" name="hh_size" value="2.7" checked="">2.7人/户</label><label class="checkbox-row" style="margin-left:8px"><input type="radio" name="hh_size" value="custom">自定义</label><input type="number" id="hh_custom" value="" placeholder="" step="0.1" style="width:48px;padding:2px 4px;font-size:0.75rem">人/户</div>
+        </label>
+      </div>
+      </div>
+      <div class="section-block" style="background:#f0f7f2;border-color:#c8e0cf">
+        <h3 style="font-size:0.82rem;font-weight:600;color:#57534e;margin-bottom:10px">车位配置</h3>
+        <div class="form-grid">
+          <label>住宅车位标准
+            <select id="park_res_std">
+              <option value="1.5">1.5辆/100㎡</option>
+              <option value="1.2">1.2辆/100㎡</option>
+              <option value="1.0" selected="">1.0辆/100㎡</option>
+              <option value="0.7">0.7辆/100㎡</option>
+            </select>
+          </label>
+          <label>商业车位标准
+            <select id="park_com_std">
+              <option value="0.3">0.3辆/100㎡</option>
+              <option value="0.5">0.5辆/100㎡</option>
+              <option value="0.7" selected="">0.7辆/100㎡</option>
+            </select>
+          </label>
+          <label>配套车位标准
+            <select id="park_spt_std">
+              <option value="1.0">1辆/100㎡</option>
+              <option value="0.7" selected="">0.7辆/100㎡</option>
+            </select>
+          </label>
+          <label>地面车位比例
+            <select id="park_ground_ratio">
+              <option value="0">0%</option>
+              <option value="5" selected="">5%</option>
+              <option value="10">10%</option>
+            </select>
+          </label>
+          <label>非人防车位单车位面积
+            <select id="park_non_civil_per">
+              <option value="32">32㎡</option>
+              <option value="35" selected="">35㎡</option>
+              <option value="38">38㎡</option>
+            </select>
+          </label>
+          <label>人防车位单车位面积
+            <select id="park_civil_per">
+              <option value="35">35㎡</option>
+              <option value="38" selected="">38㎡</option>
+              <option value="40">40㎡</option>
+            </select>
+          </label>
+          <label>人防面积比例
+            <select id="park_civil_ratio">
+              <option value="5">5%</option>
+              <option value="6" selected="">6%</option>
+            </select>
+          </label>
+          <label>非机动车位比例
+            <select id="park_nonmotor_ratio">
+              <option value="1.0" selected="">1.0辆/户</option>
+              <option value="1.2">1.2辆/户</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div class="section-block" style="background:#faf8f0;border-color:#e8e0c8">
+        <h3 style="font-size:0.82rem;font-weight:600;color:#57534e;margin-bottom:8px">学校配套</h3>
+        
+        <div class="school-row">
+          <label class="checkbox-row"><input type="checkbox" id="school_kinder"> 幼儿园</label>
+          <span class="area-out" id="kinder_result" style="font-size:0.72rem">-</span>
+        </div>
+        <div class="school-row" style="padding-left:0px">
+          <span class="school-param">千人<input id="kinder_rate" type="number" value="45">生</span>
+          <span class="school-param">班均<input id="kinder_per_class" type="number" value="30">人</span>
+          <span class="school-param">生均<input id="kinder_area_per" type="number" value="12">㎡</span>
+          <span class="school-param">用地<input id="kinder_land_per" type="number" value="15">㎡</span>
+        </div>
+        <div class="school-row">
+          <label class="checkbox-row"><input type="checkbox" id="school_primary"> 小学</label>
+          <span class="area-out" id="primary_result" style="font-size:0.72rem">-</span>
+        </div>
+        <div class="school-row" style="padding-left:0px">
+          <span class="school-param">千人<input id="primary_rate" type="number" value="110">生</span>
+          <span class="school-param">班均<input id="primary_per_class" type="number" value="45">人</span>
+          <span class="school-param">生均<input id="primary_area_per" type="number" value="8">㎡</span>
+          <span class="school-param">用地<input id="primary_land_per" type="number" value="18">㎡</span>
+        </div>
+        <div class="school-row">
+          <label class="checkbox-row"><input type="checkbox" id="school_middle"> 中学</label>
+          <span class="area-out" id="middle_result" style="font-size:0.72rem">-</span>
+        </div>
+        <div class="school-row" style="padding-left:0px">
+          <span class="school-param">千人<input id="middle_rate" type="number" value="35">生</span>
+          <span class="school-param">班均<input id="middle_per_class" type="number" value="50">人</span>
+          <span class="school-param">生均<input id="middle_area_per" type="number" value="10">㎡</span>
+          <span class="school-param">用地<input id="middle_land_per" type="number" value="22">㎡</span>
+        </div>
+        <div style="font-size:0.68rem;color:#a8a29e;margin-top:6px">
+          计算规则：学生数 = 总人口 × 千人指标 ÷ 1000；班级数取整：幼儿园3的倍数、小学6的倍数、中学6的倍数（均向上取整）；建筑面积 = 取整后班级数 × 班均人数 × 生均面积；用地面积 = 取整后班级数 × 班均人数 × 生均用地面积
+        </div>
+
+    </div>
+
+
+
+
+      <div class="section-block" style="background:#f7f4f0;border-color:#e0d4c0">
+        <h3 style="font-size:0.82rem;font-weight:600;color:#57534e;margin-bottom:8px">其它配套要求</h3>
+        <div class="school-row">
+          <label class="checkbox-row"><input type="checkbox" id="custom_fac_1"> 配套一</label>
+          <span class="school-param">名称<input id="custom_name_1" type="text" value="" placeholder="配套名称" style="width:140px"></span>
+          <span class="school-param">面积<input id="custom_area_1" type="number" value="" placeholder="㎡" style="width:60px">㎡</span>
+        </div>
+        <div class="school-row">
+          <label class="checkbox-row"><input type="checkbox" id="custom_fac_2"> 配套二</label>
+          <span class="school-param">名称<input id="custom_name_2" type="text" value="" placeholder="配套名称" style="width:140px"></span>
+          <span class="school-param">面积<input id="custom_area_2" type="number" value="" placeholder="㎡" style="width:60px">㎡</span>
+        </div>
+        <div class="school-row">
+          <label class="checkbox-row"><input type="checkbox" id="custom_fac_3"> 配套三</label>
+          <span class="school-param">名称<input id="custom_name_3" type="text" value="" placeholder="配套名称" style="width:140px"></span>
+          <span class="school-param">面积<input id="custom_area_3" type="number" value="" placeholder="㎡" style="width:60px">㎡</span>
+        </div>
+        <div class="facility-tools">
+          <label class="facility-count-option" title="勾选时配套面积占用计容建筑面积；取消后配套面积不参与容积率口径">
+            <input type="checkbox" id="facility_count_in_far" checked><span>配套计容</span>
+          </label>
+          <button type="button" class="facility-btn" onclick="showFacilityManager()">配套数据维护</button>
+        </div>
+      </div>
+    </div>
+    <!-- 产品定位 -->
+    <div class="card">
+      <h2>产品定位</h2>
+      <!-- 住宅定位 -->
+      <div class="section-block" style="background:#f5f0fa;border-color:#dcc8f0">
+        <h3 style="font-size:0.8rem;font-weight:600;color:#57534e;margin-bottom:6px">住宅定位 <span id="res_total_hint" style="font-weight:400;font-size:0.72rem;color:var(--muted)">占比90.0%，面积≈112,500㎡</span></h3>
+        <table class="prod-table">
+<thead><tr><th class="th-name">产品</th><th class="th-pct">占比</th><th class="th-area">面积</th><th class="th-unit">户均</th><th class="th-units">套数</th></tr></thead>
+<tbody>
+<tr><td class="td-name">T4高层</td><td class="td-pct"><input type="number" id="res_t4" value="100"><span>%</span></td><td class="td-area"><span class="area-out" id="area_t4">≈112,500㎡</span></td><td class="td-unit"></td><td class="td-units"></td></tr>
+<tr><td class="td-name sub">T4-A</td><td class="td-pct"><input type="number" id="split_t4a" value="50"><span>%</span></td><td class="td-area"><span class="area-out" id="area_t4a">≈67,500㎡</span></td><td class="td-unit"><input type="number" id="unit_t4a" value="120"><span>㎡</span></td><td class="td-units"><span class="area-out" id="units_t4a">≈563套</span></td></tr>
+<tr><td class="td-name sub">T4-B</td><td class="td-pct"><input type="number" id="split_t4b" value="50"><span>%</span></td><td class="td-area"><span class="area-out" id="area_t4b">≈45,000㎡</span></td><td class="td-unit"><input type="number" id="unit_t4b" value="95"><span>㎡</span></td><td class="td-units"><span class="area-out" id="units_t4b">≈500套</span></td></tr>
+<tr><td class="td-name">T3高层</td><td class="td-pct"><input type="number" id="res_t3" value=""><span>%</span></td><td class="td-area"><span class="area-out" id="area_t3">-㎡</span></td><td class="td-unit"></td><td class="td-units"></td></tr>
+<tr><td class="td-name sub">T3-A</td><td class="td-pct"><input type="number" id="split_t3a" value="67"><span>%</span></td><td class="td-area"><span class="area-out" id="area_t3a">-㎡</span></td><td class="td-unit"><input type="number" id="unit_t3a" value="120"><span>㎡</span></td><td class="td-units"><span class="area-out" id="units_t3a">-套</span></td></tr>
+<tr><td class="td-name sub">T3-B</td><td class="td-pct"><input type="number" id="split_t3b" value="33"><span>%</span></td><td class="td-area"><span class="area-out" id="area_t3b">-㎡</span></td><td class="td-unit"><input type="number" id="unit_t3b" value="95"><span>㎡</span></td><td class="td-units"><span class="area-out" id="units_t3b">-套</span></td></tr>
+<tr><td class="td-name">T2高层</td><td class="td-pct"><input type="number" id="res_t2h" value=""><span>%</span></td><td class="td-area"><span class="area-out" id="area_t2h">-㎡</span></td><td class="td-unit"><input type="number" id="unit_t2h" value=""><span>㎡</span></td><td class="td-units"><span class="area-out" id="units_t2h">-套</span></td></tr>
+<tr><td class="td-name">T2小高层</td><td class="td-pct"><input type="number" id="res_t2m" value=""><span>%</span></td><td class="td-area"><span class="area-out" id="area_t2m">-㎡</span></td><td class="td-unit"><input type="number" id="unit_t2m" value=""><span>㎡</span></td><td class="td-units"><span class="area-out" id="units_t2m">-套</span></td></tr>
+<tr><td class="td-name">T2洋房</td><td class="td-pct"><input type="number" id="res_yf" value=""><span>%</span></td><td class="td-area"><span class="area-out" id="area_yf">-㎡</span></td><td class="td-unit"><input type="number" id="unit_yf" value=""><span>㎡</span></td><td class="td-units"><span class="area-out" id="units_yf">-套</span></td></tr>
+<tr><td class="td-name">别墅</td><td class="td-pct"><input type="number" id="res_bs" value=""><span>%</span></td><td class="td-area"><span class="area-out" id="area_bs">-㎡</span></td><td class="td-unit"><input type="number" id="unit_bs" value=""><span>㎡</span></td><td class="td-units"><span class="area-out" id="units_bs">-套</span></td></tr>
+</tbody></table>
+        <div class="product-sum ok" id="res_sum">住宅占比合计: 100% ✓  总套数: ≈1,063套</div>
+      </div>
+      <!-- 商业定位 -->
+      <div class="section-block" style="background:#faf4f0;border-color:#f0d4c0;margin-top:10px">
+        <h3 style="font-size:0.8rem;font-weight:600;color:#57534e;margin-bottom:6px">商业定位 <span id="com_total_hint" style="font-weight:400;font-size:0.72rem;color:var(--muted)">占比9.3%，面积≈11,635㎡</span></h3>
+        <table class="prod-table">
+<thead><tr><th class="th-name">产品</th><th class="th-pct">占比</th><th class="th-area">面积</th></tr></thead>
+<tbody>
+<tr><td class="td-name">裙楼商业</td><td class="td-pct"><input type="number" id="com_bottom" value="100"><span>%</span></td><td class="td-area"><span class="area-out" id="area_com_bottom">≈11,635㎡</span></td></tr>
+<tr><td class="td-name">集中商业</td><td class="td-pct"><input type="number" id="com_central" value=""><span>%</span></td><td class="td-area"><span class="area-out" id="area_com_central">≈0㎡</span></td></tr>
+<tr><td class="td-name">商业综合楼</td><td class="td-pct"><input type="number" id="com_complex" value=""><span>%</span></td><td class="td-area"><span class="area-out" id="area_com_complex">≈0㎡</span></td></tr>
+</tbody></table>
+        <div class="product-sum ok" id="com_sum">商业占比合计: 100% ✓</div>
+        <div style="font-size:0.68rem;color:#a8a29e;margin-top:6px">※ 该比例未考虑配套面积，最终以指标表为准，仅作参考</div>
+      </div>
+    </div>
+
+    <!-- 警告 -->
+    <div id="warnBox" style="display:none"></div>
+
+    <!-- 计算按钮 -->
+    <div id="errorBox" class="error-box" style="display:none"></div>
+
+    <!-- 项目管理 -->
+    <div class="card">
+      <button class="collapse-btn" onclick="togglePanel('projPanel')">项目管理 ▸</button>
+      <div id="projPanel" style="display:none">
+        <div class="save-row">
+          <input id="projName" type="text" placeholder="项目名称">
+          <button class="btn btn-green" style="padding:8px 14px;font-size:0.8rem" onclick="saveProject()">保存</button>
+        </div>
+        <div id="projMsg" class="msg"></div>
+        <div id="projList" class="proj-list"></div>
+        <div style="display:flex;gap:6px;margin-top:8px">
+          <button class="btn" style="flex:1;padding:6px 10px;font-size:0.72rem;background:#f0f7ff;color:#2563eb" onclick="exportProjects()">导出备份</button>
+          <button class="btn" style="flex:1;padding:6px 10px;font-size:0.72rem;background:#f0fdf4;color:#16a34a" onclick="document.getElementById('importFile').click()">导入备份</button>
+          <input type="file" id="importFile" accept=".json" style="display:none" onchange="importProjects(event)">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 右侧结果 ===== -->
+  <div style="display:flex;flex-direction:column;gap:0px">
+    <div id="hpArea" style="display:none"></div>
+    <div id="buildingAnalysisArea"></div>
+    <div id="projectCalcArea" style="display:none"></div>
+    <div id="resultArea">
+    <div class="card">
+      <table class="indicator-table" id="indicatorTable"><colgroup><col style="width:16%"><col style="width:5%"><col style="width:16%"><col style="width:18%;text-align:right"><col style="width:7%"><col style="width:auto"></colgroup><thead><tr><th colspan="6" style="font-size:1rem;font-weight:700;background:#C6E0B4;padding:8px">经济技术指标表</th></tr><tr><th colspan="3">指标名称</th><th>指标</th><th>单位</th><th>备注</th></tr></thead><tbody><tr><td colspan="3">总用地面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td colspan="1" rowspan="2">其中</td><td colspan="2">不计容用地面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td colspan="2">计容用地面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td colspan="3">总建筑面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td colspan="3">计容建筑面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td rowspan="22">其中</td><td colspan="2" style="text-align:left">1.住宅</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td colspan="2" style="text-align:left">2.商业</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>2.1</td><td>裙楼商业</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>2.2</td><td>集中商业</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>2.3</td><td>商业综合楼</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td colspan="2" style="text-align:left">3. 公共配套</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>3.1</td><td>物业管理用房</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>3.2</td><td>儿童老年人活动场地</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td></td></tr><tr><td>3.3</td><td>再生资源回收站</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>3.4</td><td>邮件快递送达设施</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>3.5</td><td>生鲜超市</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>3.6</td><td>公共厕所</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>3.7</td><td>便利店</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>3.8</td><td>生活垃圾收集点</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>3.9</td><td>社区阅报栏</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>3.10</td><td>社区文化墙</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>3.11</td><td>图书室</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>3.12</td><td>公共电子阅览室</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>3.13</td><td>多功能室</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>3.14</td><td>文体活动室</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>3.15</td><td>商业快递综合服务站</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>3.16</td><td>住宅快递综合服务站</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td colspan="3">不计容建筑面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td rowspan="5">其中</td><td colspan="2" style="text-align:left">1. 架空层</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td colspan="2" style="text-align:left">2. 地下室建筑面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>2.1</td><td>人防</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>2.2</td><td>非人防</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td>2.3</td><td>非机动车停车场</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td colspan="3">容积率</td><td style="text-align:center">-</td><td style="text-align:center">-</td><td style="text-align:center">-</td></tr><tr><td colspan="3">建筑占地面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr><tr><td colspan="3">建筑密度</td><td style="text-align:center">-</td><td style="text-align:center">/</td><td style="text-align:center">-</td></tr><tr><td colspan="3">绿地率</td><td style="text-align:center">-</td><td style="text-align:center">%</td><td style="text-align:center">-</td></tr><tr><td colspan="3">建筑高度</td><td style="text-align:center">-</td><td style="text-align:center">m</td><td style="text-align:center">-</td></tr><tr><td colspan="3">停车位</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr><tr><td colspan="1" rowspan="2">其中</td><td colspan="2">地上车位</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr><tr><td colspan="2">地下车位</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr><tr><td colspan="1" rowspan="2">地下车位</td><td colspan="2">人防车位</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr><tr><td colspan="2">非人防车位</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr><tr><td colspan="3">非机动车停车位</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr><tr><td colspan="1" rowspan="2">其中</td><td colspan="2">地上停车</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr><tr><td colspan="2">地下停车</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr><tr><td colspan="3">户数</td><td style="text-align:center">-</td><td style="text-align:center">户</td><td style="text-align:center">-</td></tr><tr><td colspan="3">总人数</td><td style="text-align:center">-</td><td style="text-align:center">人</td><td style="text-align:center">-</td></tr></tbody></table>
+    </div>
+  </div>
+  </div>
+</main>
+
+<script src="facilities.js"></script>
+<script src="building_analysis.js"></script>
+<script src="project_calc.js?v=20260608-1"></script>
+<script src="detailed_lat.js"></script>
+<script>
+// === 工具函数 ===
+function fmt(n) {
+  if (n == null || isNaN(n)) return '-';
+  return n.toLocaleString('zh-CN', { maximumFractionDigits: 2 });
+}
+
+// === 读取输入值 ===
+function getVal(id, def) {
+  var el = document.getElementById(id);
+  if (!el) return def;
+  var v = parseFloat(el.value);
+  return isNaN(v) ? def : v;
+}
+
+function setText(id, text) { var el = document.getElementById(id); if (el) el.textContent = text; }
+
+// === 更新产品定位面板 ===
+function updateProducts() {
+  var balanceLand = getVal('balance_land_area', 0);
+  var buildLand = (getVal('construction_land_area', 0) || getVal('land_area', 0)) + balanceLand;
+  var far = getVal('far', 0);
+  var comPct = getVal('planned_commercial_ratio', 0);
+  var totalFar = buildLand * far;
+  // 计算后使用实际值
+  var resTotal, comTotal;
+  if (window._lastResult) {
+    resTotal = window._lastResult.resArea;
+    comTotal = window._lastResult.comArea;
+  } else {
+    resTotal = totalFar * (1 - comPct / 100);
+    var sptTotalHint = 490 + totalFar * 0.003;
+    comTotal = totalFar - resTotal - sptTotalHint;
+  }
+
+  // 住宅提示
+  var hint = document.getElementById('res_total_hint');
+  var resPct = totalFar > 0 ? (resTotal / totalFar * 100) : 0;
+  if (hint) hint.textContent = totalFar > 0
+    ? '占比' + resPct.toFixed(1) + '%，面积≈' + fmt(resTotal) + '㎡'
+    : '';
+
+  // 商业提示
+  var hint2 = document.getElementById('com_total_hint');
+  var comPctReal2 = totalFar > 0 ? (comTotal / totalFar * 100) : 0;
+  if (hint2) hint2.textContent = totalFar > 0
+    ? '占比' + comPctReal2.toFixed(1) + '%，面积≈' + fmt(comTotal) + '㎡'
+    : '';
+
+  // 住宅各产品
+  var totalUnits = 0, resSum = 0;
+
+  function calcProduct(id, pct) {
+    resSum += pct;
+    var area = resTotal * pct / 100;
+    setText('area_' + id, area > 0 ? '≈' + fmt(area) + '㎡' : '-㎡');
+    return area;
+  }
+
+  function calcSubGroup(pId, area, subA, subB, unitA, unitB) {
+    var splitA = getVal('split_' + subA, 50);
+    var splitB = getVal('split_' + subB, 50);
+    var totalSplit = splitA + splitB;
+    if (totalSplit === 0 || area <= 0 || unitA <= 0 || unitB <= 0) {
+      setText('area_' + subA, '-㎡');
+      setText('area_' + subB, '-㎡');
+      setText('units_' + subA, '-套');
+      setText('units_' + subB, '-套');
+      return;
+    }
+    // 加权户均 → 总套数
+    var weightedUnit = (unitA * splitA + unitB * splitB) / totalSplit;
+    var totalSubUnits = Math.round(area / weightedUnit);
+    // 按比例拆分套数
+    var unitsA = Math.round(totalSubUnits * splitA / totalSplit);
+    var unitsB = totalSubUnits - unitsA;
+    // 套数 → 面积
+    var areaA = unitsA * unitA;
+    var areaB = unitsB * unitB;
+    // 差值补齐到A产品，保证和上级面积一致
+    var diff = area - (areaA + areaB);
+    areaA += diff;
+    totalUnits += unitsA + unitsB;
+    setText('area_' + subA, '≈' + fmt(areaA) + '㎡');
+    setText('area_' + subB, '≈' + fmt(areaB) + '㎡');
+    setText('units_' + subA, '≈' + unitsA.toLocaleString('zh-CN') + '套');
+    setText('units_' + subB, '≈' + unitsB.toLocaleString('zh-CN') + '套');
+  }
+
+  function calcSimple(id, pct, unitSize) {
+    var area = calcProduct(id, pct);
+    var units = unitSize > 0 ? Math.round(area / unitSize) : 0;
+    totalUnits += units;
+    setText('units_' + id, units > 0 ? '≈' + units.toLocaleString('zh-CN') + '套' : '-套');
+  }
+
+  // T4: 套数优先
+  var t4Area = calcProduct('t4', getVal('res_t4', 0));
+  calcSubGroup('t4', t4Area, 't4a', 't4b', getVal('unit_t4a', 120), getVal('unit_t4b', 90));
+
+  // T3: 套数优先
+  var t3Area = calcProduct('t3', getVal('res_t3', 0));
+  calcSubGroup('t3', t3Area, 't3a', 't3b', getVal('unit_t3a', 0), getVal('unit_t3b', 0));
+
+  // 其他简单产品
+  calcSimple('t2h', getVal('res_t2h', 0), getVal('unit_t2h', 0));
+  calcSimple('t2m', getVal('res_t2m', 0), getVal('unit_t2m', 0));
+  calcSimple('yf', getVal('res_yf', 0), getVal('unit_yf', 0));
+  calcSimple('bs', getVal('res_bs', 0), getVal('unit_bs', 0));
+
+  var resSumEl = document.getElementById('res_sum');
+  if (resSumEl) {
+    resSumEl.textContent = '住宅占比合计: ' + resSum + '% ' + (resSum === 100 ? '✓' : '(需等于100%)') + '  总套数: ≈' + totalUnits.toLocaleString('zh-CN') + '套';
+    resSumEl.className = 'product-sum' + (resSum === 100 ? ' ok' : ' warn');
+  }
+
+  // 商业各产品
+  var comSum = 0;
+  var comIds = ['com_bottom','com_central','com_complex'];
+  for (var j = 0; j < comIds.length; j++) {
+    var cpct = getVal(comIds[j], 0);
+    comSum += cpct;
+    setText('area_' + comIds[j], comTotal > 0 ? '≈' + fmt(comTotal * cpct / 100) + '㎡' : '-㎡');
+  }
+  var comSumEl = document.getElementById('com_sum');
+  if (comSumEl) {
+    comSumEl.textContent = '商业占比合计: ' + comSum + '% ' + (comSum === 100 ? '✓' : '(需等于100%)');
+    comSumEl.className = 'product-sum' + (comSum === 100 ? ' ok' : ' warn');
+  }
+
+  // 学校
+  updateSchools();
+  // 产品配置表
+  if (typeof refreshHP === 'function') refreshHP();
+
+  // 计容面积提示
+  var farHint = document.getElementById('far_hint');
+  if (farHint) farHint.textContent = totalFar > 0 ? '≈' + fmt(totalFar) + '㎡' : '';
+
+  // 亩换算
+  var landMu = document.getElementById('land_mu');
+  var buildMu = document.getElementById('build_mu');
+  var balanceMu = document.getElementById('balance_mu');
+  var land = getVal('land_area', 0);
+  var build = getVal('construction_land_area', 0);
+  var balance = getVal('balance_land_area', 0);
+  if (landMu) landMu.textContent = land > 0 ? '≈' + (land / 666.67).toFixed(2) + '亩' : '';
+  if (buildMu) buildMu.textContent = build > 0 ? '≈' + (build / 666.67).toFixed(2) + '亩' : '';
+  if (balanceMu) balanceMu.textContent = balance > 0 ? '≈' + (balance / 666.67).toFixed(2) + '亩' : '';
+}
+
+// === 学校配置计算 ===
+function updateSchools() {
+  var balanceLand = getVal('balance_land_area', 0);
+  var buildLand = (getVal('construction_land_area', 0) || getVal('land_area', 0)) + balanceLand;
+  var far = getVal('far', 0);
+  var comPct = getVal('planned_commercial_ratio', 0);
+  var totalFar = buildLand * far;
+  var resArea = totalFar * (1 - comPct / 100);
+  var avgUnit = getVal('avg_unit_size', 0) || 110;
+  var units = avgUnit > 0 ? Math.round(resArea / avgUnit) : 0;
+  var hhRadio = document.querySelector('input[name=\"hh_size\"]:checked');
+  var personsPerHH;
+  if (hhRadio && hhRadio.value === 'custom') {
+    var hhCustom = parseFloat(document.getElementById('hh_custom').value);
+    personsPerHH = !isNaN(hhCustom) && hhCustom > 0 ? hhCustom : 2.7;
+  } else {
+    personsPerHH = hhRadio ? parseFloat(hhRadio.value) : 2.7;
+  }
+  var population = Math.round(units * personsPerHH);
+
+  function roundUp(n, m) { return Math.ceil(n / m) * m; }
+
+  function calcSchool(checkId, rateId, perClassId, areaId, landId, resultId, classMultiple) {
+    var checked = document.getElementById(checkId);
+    if (!checked || !checked.checked) {
+      setText(resultId, '-');
+      return;
+    }
+    var rate = getVal(rateId, 0);
+    var perClass = getVal(perClassId, 30);
+    var areaPer = getVal(areaId, 12);
+    var landPer = getVal(landId, 20);
+    var students = Math.round(population * rate / 1000);
+    var rawClasses = perClass > 0 ? (students / perClass) : 0;
+    var classes = roundUp(rawClasses, classMultiple);
+    var buildingArea = Math.round(classes * perClass * areaPer);
+    var landArea = Math.round(classes * perClass * landPer);
+    setText(resultId, '学生' + students + '人，' + classes + '班，建筑面积' + buildingArea.toLocaleString('zh-CN') + '㎡，用地面积' + landArea.toLocaleString('zh-CN') + '㎡');
+  }
+
+  calcSchool('school_kinder', 'kinder_rate', 'kinder_per_class', 'kinder_area_per', 'kinder_land_per', 'kinder_result', 3);
+  calcSchool('school_primary', 'primary_rate', 'primary_per_class', 'primary_area_per', 'primary_land_per', 'primary_result', 6);
+  calcSchool('school_middle', 'middle_rate', 'middle_per_class', 'middle_area_per', 'middle_land_per', 'middle_result', 6);
+}
+
+// === 防抖 ===
+var _calcTimer = null;
+function debouncedCalculate() {
+  if (_calcTimer) clearTimeout(_calcTimer);
+  if (!window._fullCalculated) {
+    _calcTimer = setTimeout(function() { updateProducts(); }, 200);
+    return;
+  }
+  _calcTimer = setTimeout(function() { calculate(); }, 300);
+}
+
+// === 绑定事件：所有输入变更 → 实时重算 ===
+var ALL_INPUT_IDS = [
+  'land_area','construction_land_area','balance_land_area','far','building_density','green_ratio','height_limit',
+  'planned_commercial_ratio','district',
+  'res_t4','res_t3','res_t2h','res_t2m','res_yf','res_bs',
+  'com_bottom','com_central','com_complex',
+  'unit_t4a','unit_t4b','unit_t3a','unit_t3b','unit_t2h','unit_t2m','unit_yf','unit_bs',
+  'split_t4a','split_t4b','split_t3a','split_t3b',
+  'kinder_rate','kinder_per_class','kinder_area_per','kinder_land_per',
+  'primary_rate','primary_per_class','primary_area_per','primary_land_per',
+  'middle_rate','middle_per_class','middle_area_per','middle_land_per',
+  'custom_name_1','custom_area_1','custom_name_2','custom_area_2','custom_name_3','custom_area_3',
+  'park_res_std','park_com_std','park_spt_std','park_ground_ratio','park_civil_ratio','park_civil_per','park_non_civil_per','park_nonmotor_ratio',
+  'project_name'
+];
+
+var ALL_CHECKBOX_IDS = ['near_metro','school_kinder','school_primary','school_middle','custom_fac_1','custom_fac_2','custom_fac_3','facility_count_in_far'];
+
+ALL_INPUT_IDS.forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el) el.addEventListener('input', debouncedCalculate);
+});
+ALL_CHECKBOX_IDS.forEach(function(id) {
+  var el = document.getElementById(id);
+  if (el) el.addEventListener('change', debouncedCalculate);
+});
+// 户均人口 radio
+document.querySelectorAll('input[name=\"hh_size\"]').forEach(function(el) {
+  el.addEventListener('change', debouncedCalculate);
+});
+var hhCustomEl = document.getElementById('hh_custom');
+if (hhCustomEl) hhCustomEl.addEventListener('input', debouncedCalculate);
+
+// === 空指标表 ===
+function renderEmptyTable() {
+  var distNames = {nanming:"南明区",yunyan:"云岩区",guanshanhu:"观山湖区",huaxi:"花溪区",baiyun:"白云区",jingkai:"经开区",gaoxin:"高新区"};
+  var dist = document.getElementById("district");
+  var distName = dist ? (distNames[dist.value] || "") : "";
+  var projName = document.getElementById("project_name");
+  var name = projName ? projName.value.trim() : "";
+  var parts = []; if (distName) parts.push(distName); if (name) parts.push(name); parts.push("经济技术指标表");
+  var title = parts.join(" · ");
+  var h = "<thead><tr><th colspan=\"6\" style=\"font-size:1rem;font-weight:700;background:#C6E0B4;padding:8px\">" + title + "</th></tr>";
+  h += "<tr><th colspan=\"3\">指标名称</th><th>指标</th><th>单位</th><th>备注</th></tr></thead><tbody>";
+  h += '<tr><td colspan=\"3\">总用地面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"1\" rowspan=\"4\">其中</td><td colspan=\"2\">不计容用地面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"2\">建设用地面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"2\">平衡用地面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"2\">计容用地面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">总建筑面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">计容建筑面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td rowspan=\"22\">其中</td><td colspan=\"2\" style=\"text-align:left\">1.住宅</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"2\" style=\"text-align:left\">2.商业</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>2.1</td><td>裙楼商业</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>2.2</td><td>集中商业</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>2.3</td><td>商业综合楼</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"2\" style=\"text-align:left\">3. 公共配套</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.1</td><td>物业管理用房</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.2</td><td>儿童老年人活动场地</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td>-</td></tr>';
+  h += '<tr><td>3.3</td><td>再生资源回收站</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.4</td><td>邮件快递送达设施</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td>-<td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.5</td><td>生鲜超市</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.6</td><td>公共厕所</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.7</td><td>便利店</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.8</td><td>生活垃圾收集点</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.9</td><td>社区阅报栏</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.10</td><td>社区文化墙</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.11</td><td>图书室</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.12</td><td>公共电子阅览室</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.13</td><td>多功能室</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.14</td><td>文体活动室</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.15</td><td>商业快递综合服务站</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.16</td><td>住宅快递综合服务站</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">不计容建筑面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td rowspan=\"5\">其中</td><td colspan=\"2\" style=\"text-align:left\">1. 架空层</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"2\" style=\"text-align:left\">2. 地下室建筑面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>2.1</td><td>人防</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>2.2</td><td>非人防</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>2.3</td><td>非机动车停车场</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">容积率</td><td style="text-align:center">-</td><td style="text-align:center">-</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">建筑占地面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">建筑密度</td><td style="text-align:center">-</td><td style="text-align:center">/</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">绿地率</td><td style="text-align:center">-</td><td style="text-align:center">%</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">建筑高度</td><td style="text-align:center">-</td><td style="text-align:center">m</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">停车位</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"1\" rowspan=\"2\">其中</td><td colspan=\"2\">地上车位</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"2\">地下车位</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"1\" rowspan=\"2\">地下车位</td><td colspan=\"2\">人防车位</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"2\">非人防车位</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">非机动车停车位</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"1\" rowspan=\"2\">其中</td><td colspan=\"2\">地上停车</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"2\">地下停车</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">户数</td><td style="text-align:center">-</td><td style="text-align:center">户</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">总人数</td><td style="text-align:center">-</td><td style="text-align:center">人</td><td style="text-align:center">-</td></tr>';
+  h += "</tbody>";
+  var colgrp = '<colgroup><col style=\"width:16%\"><col style=\"width:5%\"><col style=\"width:16%\"><col style=\"width:18%;text-align:right\"><col style=\"width:7%\"><col style=\"width:auto\"></colgroup>';
+  document.getElementById("indicatorTable").innerHTML = colgrp + h;
+}
+
+// === 计算引擎 ===
+function calculate() {
+  var inp = {
+    land_area: getVal('land_area', 0),
+    construction_land_area: getVal('construction_land_area', 0) || getVal('land_area', 0),
+    far: getVal('far', 0),
+    building_density: getVal('building_density', 0),
+    green_ratio: getVal('green_ratio', 0),
+    height_limit: getVal('height_limit', 0),
+    planned_commercial_ratio: getVal('planned_commercial_ratio', 0),
+    park_res_std: getVal('park_res_std', 1.0),
+    park_com_std: getVal('park_com_std', 0.7),
+    park_spt_std: getVal('park_spt_std', 0.7),
+    park_ground_ratio: getVal('park_ground_ratio', 5),
+    park_non_civil_per: getVal('park_non_civil_per', 35),
+    park_civil_per: getVal('park_civil_per', 38),
+    park_civil_ratio: getVal('park_civil_ratio', 6),
+    park_nonmotor_ratio: getVal('park_nonmotor_ratio', 1.0),
+  };
+  var hhRadio = document.querySelector('input[name=\"hh_size\"]:checked');
+  var personsPerHH;
+  if (hhRadio && hhRadio.value === 'custom') {
+    var hhCustom = parseFloat(document.getElementById('hh_custom').value);
+    personsPerHH = !isNaN(hhCustom) && hhCustom > 0 ? hhCustom : 2.7;
+  } else {
+    personsPerHH = hhRadio ? parseFloat(hhRadio.value) : 2.7;
+  }
+
+  var balanceLand = getVal('balance_land_area', 0);
+  var buildLand = inp.construction_land_area + balanceLand;
+  // Step 1: 用地
+  var footprint = buildLand * inp.building_density / 100;
+  var greenArea = buildLand * inp.green_ratio / 100;
+  var roadHard = Math.max(0, buildLand - footprint - greenArea);
+
+  // Step 2: 计容
+  var totalFar = buildLand * inp.far;
+  var comRatio = inp.planned_commercial_ratio / 100;
+  var facilityCountEl = document.getElementById('facility_count_in_far');
+  var facilityCountInFar = !facilityCountEl || facilityCountEl.checked;
+  var customFacs = [];
+  for (var ci = 1; ci <= 3; ci++) {
+    var cb = document.getElementById('custom_fac_'+ci);
+    if (cb && cb.checked) {
+      var cn = document.getElementById('custom_name_'+ci);
+      var ca = document.getElementById('custom_area_'+ci);
+      var cname = cn ? (cn.value.trim() || '配套'+ci) : '配套'+ci;
+      var carea = ca ? (parseFloat(ca.value) || 0) : 0;
+      if (carea > 0) customFacs.push({name: cname, area: carea});
+    }
+  }
+  var customFacTotal = 0;
+  for (var cfi = 0; cfi < customFacs.length; cfi++) customFacTotal += customFacs[cfi].area;
+
+  // Step 3: 户数与人口 (from product config)
+  var estResArea = totalFar * (1 - comRatio);
+  var totalUnits = 0;
+  function countUnits(id, pct, unitSize) {
+    var area = estResArea * pct / 100;
+    if (unitSize > 0) totalUnits += Math.round(area / unitSize);
+  }
+  function countSubGroup(pct, subA, subB, unitA, unitB) {
+    var area = estResArea * pct / 100;
+    var splitA = getVal('split_' + subA, 50);
+    var splitB = getVal('split_' + subB, 50);
+    var totalSplit = splitA + splitB;
+    if (totalSplit === 0 || area <= 0 || unitA <= 0 || unitB <= 0) return;
+    var weightedUnit = (unitA * splitA + unitB * splitB) / totalSplit;
+    var totalSubUnits = Math.round(area / weightedUnit);
+    var unitsA = Math.round(totalSubUnits * splitA / totalSplit);
+    var unitsB = totalSubUnits - unitsA;
+    totalUnits += unitsA + unitsB;
+  }
+  countSubGroup(getVal('res_t4',0), 't4a', 't4b', getVal('unit_t4a',0), getVal('unit_t4b',0));
+  countSubGroup(getVal('res_t3',0), 't3a', 't3b', getVal('unit_t3a',0), getVal('unit_t3b',0));
+  countUnits('t2h', getVal('res_t2h',0), getVal('unit_t2h',0));
+  countUnits('t2m', getVal('res_t2m',0), getVal('unit_t2m',0));
+  countUnits('yf', getVal('res_yf',0), getVal('unit_yf',0));
+  countUnits('bs', getVal('res_bs',0), getVal('unit_bs',0));
+  var population = Math.round(totalUnits * personsPerHH);
+
+  // 用实际住宅面积重算的函数
+  function countUnits2(id, pct, unitSize) {
+    var area = actualResArea * pct / 100;
+    if (unitSize > 0) totalUnits += Math.round(area / unitSize);
+  }
+  function countSubGroup2(pct, subA, subB, unitA, unitB) {
+    var area = actualResArea * pct / 100;
+    var splitA = getVal('split_' + subA, 50);
+    var splitB = getVal('split_' + subB, 50);
+    var totalSplit = splitA + splitB;
+    if (totalSplit === 0 || area <= 0 || unitA <= 0 || unitB <= 0) return;
+    var weightedUnit = (unitA * splitA + unitB * splitB) / totalSplit;
+    var totalSubUnits = Math.round(area / weightedUnit);
+    var unitsA = Math.round(totalSubUnits * splitA / totalSplit);
+    var unitsB = totalSubUnits - unitsA;
+    totalUnits += unitsA + unitsB;
+  }
+
+  // 配套设施面积
+  var estComArea = totalFar * comRatio;
+  var dynF3 = getFacilities(population, totalFar, estComArea, totalUnits);
+  var dynTotal = 0;
+  for (var di=0; di<dynF3.length; di++) dynTotal += dynF3[di].area;
+  var sptTotal = customFacTotal + dynTotal;
+  // 商业面积 = 计容×商业比例
+  var comArea = totalFar * comRatio;
+  var supportNonFarLimit = totalFar * 0.05;
+  var countedSupportArea = facilityCountInFar ? sptTotal : Math.max(0, sptTotal - supportNonFarLimit);
+  var resArea = totalFar - comArea - countedSupportArea;
+
+  // 住宅面积用的实际resArea重算
+  var actualResArea = resArea;
+  totalUnits = 0;
+  countSubGroup2(getVal('res_t4',0), 't4a', 't4b', getVal('unit_t4a',0), getVal('unit_t4b',0));
+  countSubGroup2(getVal('res_t3',0), 't3a', 't3b', getVal('unit_t3a',0), getVal('unit_t3b',0));
+  countUnits2('t2h', getVal('res_t2h',0), getVal('unit_t2h',0));
+  countUnits2('t2m', getVal('res_t2m',0), getVal('unit_t2m',0));
+  countUnits2('yf', getVal('res_yf',0), getVal('unit_yf',0));
+  countUnits2('bs', getVal('res_bs',0), getVal('unit_bs',0));
+  population = Math.round(totalUnits * personsPerHH);
+
+  // 学校配套
+  function roundUp(n, m) { return Math.ceil(n / m) * m; }
+  var schools = [];
+  var schNames = ['school_kinder','school_primary','school_middle'];
+  var schLabels = ['幼儿园','小学','中学'];
+  var schRates = ['kinder_rate','primary_rate','middle_rate'];
+  var schPerClass = ['kinder_per_class','primary_per_class','middle_per_class'];
+  var schAreaPer = ['kinder_area_per','primary_area_per','middle_area_per'];
+  var schMultiples = [3, 6, 6];
+  var schLandPer = ['kinder_land_per', 'primary_land_per', 'middle_land_per'];
+  for (var si = 0; si < 3; si++) {
+    var schCB = document.getElementById(schNames[si]);
+    if (schCB && schCB.checked) {
+      var rate = getVal(schRates[si], 0);
+      var perClass = getVal(schPerClass[si], 30);
+      var areaPer = getVal(schAreaPer[si], 12);
+      var landPer = getVal(schLandPer[si], 20);
+      var students = Math.round(population * rate / 1000);
+      var classes = roundUp(perClass > 0 ? students / perClass : 0, schMultiples[si]);
+      var bldArea = Math.round(classes * perClass * areaPer);
+      var landArea = Math.round(classes * perClass * landPer);
+      schools.push({name: schLabels[si], students: students, classes: classes, area: bldArea, land: landArea});
+    }
+  }
+  var schoolTotal = 0;
+  for (var sti = 0; sti < schools.length; sti++) schoolTotal += schools[sti].area;
+  var supportTotalAll = sptTotal + schoolTotal;
+  if (!facilityCountInFar) {
+    countedSupportArea = Math.max(0, supportTotalAll - supportNonFarLimit);
+    resArea = totalFar - comArea - countedSupportArea;
+    actualResArea = resArea;
+    totalUnits = 0;
+    countSubGroup2(getVal('res_t4',0), 't4a', 't4b', getVal('unit_t4a',0), getVal('unit_t4b',0));
+    countSubGroup2(getVal('res_t3',0), 't3a', 't3b', getVal('unit_t3a',0), getVal('unit_t3b',0));
+    countUnits2('t2h', getVal('res_t2h',0), getVal('unit_t2h',0));
+    countUnits2('t2m', getVal('res_t2m',0), getVal('unit_t2m',0));
+    countUnits2('yf', getVal('res_yf',0), getVal('unit_yf',0));
+    countUnits2('bs', getVal('res_bs',0), getVal('unit_bs',0));
+    population = Math.round(totalUnits * personsPerHH);
+  }
+
+  // Step 4: 车位
+  var resPark = Math.ceil(resArea / 100 * inp.park_res_std);
+  var comPark = comArea > 0 ? Math.ceil(comArea / 100 * inp.park_com_std) : 0;
+  var sptPark = sptTotal > 0 ? Math.ceil(sptTotal / 100 * inp.park_spt_std) : 0;
+  var totalPark = resPark + comPark + sptPark;
+  var groundPark = Math.round(totalPark * inp.park_ground_ratio / 100);
+  var undergroundPark = totalPark - groundPark;
+
+  // Step 5: 地下
+  var civilArea = totalFar * (inp.park_civil_ratio / 100);
+  var civilPark = civilArea > 0 ? Math.round(civilArea / inp.park_civil_per) : 0;
+  var nonCivilPark = undergroundPark - civilPark;
+  var nonCivilArea = nonCivilPark * inp.park_non_civil_per;
+  var nonMotorTotal = Math.round(totalUnits * inp.park_nonmotor_ratio);
+  var nonMotorGnd = Math.round(nonMotorTotal * 0.4);
+  var nonMotorUg = nonMotorTotal - nonMotorGnd;
+  var nonMotorArea = nonMotorUg * 1.5;
+  var undergroundTotal = civilArea + nonCivilArea + nonMotorArea;
+
+  var nonFarSupportArea = facilityCountInFar ? 0 : Math.min(supportTotalAll, supportNonFarLimit);
+  var totalBuilding = totalFar + undergroundTotal + nonFarSupportArea;
+
+  var result = {
+    land: { land_area: inp.land_area, construction_land_area: inp.construction_land_area, build_land: buildLand, balance_land: balanceLand, footprint: footprint, green_area: greenArea, road_hard: roadHard },
+    totalFar: totalFar, resArea: resArea, comArea: comArea,
+    totalBuilding: totalBuilding,
+    population: { units: totalUnits, population: population, personsPerHH: personsPerHH },
+    parking: { resPark: resPark, comPark: comPark, sptPark: sptPark, total: totalPark, ground: groundPark, underground: undergroundPark },
+    underground: { total: undergroundTotal, civilArea: civilArea, nonCivilArea: nonCivilArea, civilPark: civilPark, nonCivilPark: nonCivilPark },
+    nonmotor: { total: nonMotorTotal, ground: nonMotorGnd, underground: nonMotorUg, area: nonMotorArea },
+    customFacs: customFacs,
+    schools: schools,
+    supporting: { total: supportTotalAll, countInFar: facilityCountInFar, countedArea: countedSupportArea, nonFarArea: nonFarSupportArea, nonFarLimit: supportNonFarLimit },
+    inp: inp
+  };
+
+  window._lastResult = result;
+  window._fullCalculated = true;
+  document.getElementById('exportBtn').disabled = false;
+  document.getElementById('exportBtn').style.opacity = '1';
+  document.getElementById('exportBtn').style.cursor = 'pointer';
+  document.getElementById('calcBtn').textContent = '返回指标';
+  renderResult(result);
+  updateProducts();
+  // 各模块由对应按钮独立触发（数据变更时同步更新已展开的模块）
+  if (typeof runDetailedLAT === 'function') runDetailedLAT();
+  if (typeof runProjectCalc === 'function') runProjectCalc();
+}
+
+function toggleCalculate() {
+  if (window._fullCalculated) {
+    window._lastResult = null;
+    window._fullCalculated = false;
+    window._bldCorrected = false;
+    renderEmptyTable();
+    var ba = document.getElementById('buildingAnalysisArea');
+    if (ba) { ba.innerHTML = ''; ba.style.display = 'none'; }
+    var pc = document.getElementById('projectCalcArea');
+    if (pc) { pc.innerHTML = ''; pc.style.display = 'none'; }
+    var hp = document.getElementById('hpArea');
+    if (hp) { hp.innerHTML = ''; hp.style.display = 'none'; }
+    document.getElementById('calcBtn').textContent = '计算指标';
+    document.getElementById('exportBtn').disabled = true;
+    document.getElementById('exportBtn').style.opacity = '0.5';
+    document.getElementById('exportBtn').style.cursor = 'not-allowed';
+  } else {
+    calculate();
+    scrollToModule('resultArea');
+  }
+}
+
+// === 空指标表 ===
+function renderEmptyTable() {
+  var distNames = {nanming:"南明区",yunyan:"云岩区",guanshanhu:"观山湖区",huaxi:"花溪区",baiyun:"白云区",jingkai:"经开区",gaoxin:"高新区"};
+  var dist = document.getElementById("district");
+  var distName = dist ? (distNames[dist.value] || "") : "";
+  var projName = document.getElementById("project_name");
+  var name = projName ? projName.value.trim() : "";
+  var parts = []; if (distName) parts.push(distName); if (name) parts.push(name); parts.push("经济技术指标表");
+  var title = parts.join(" · ");
+  var h = "<thead><tr><th colspan=\"6\" style=\"font-size:1rem;font-weight:700;background:#C6E0B4;padding:8px\">" + title + "</th></tr>";
+  h += "<tr><th colspan=\"3\">指标名称</th><th>指标</th><th>单位</th><th>备注</th></tr></thead><tbody>";
+  h += '<tr><td colspan=\"3\">总用地面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"1\" rowspan=\"4\">其中</td><td colspan=\"2\">不计容用地面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"2\">建设用地面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"2\">平衡用地面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"2\">计容用地面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">总建筑面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">计容建筑面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td rowspan=\"22\">其中</td><td colspan=\"2\" style=\"text-align:left\">1.住宅</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"2\" style=\"text-align:left\">2.商业</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>2.1</td><td>裙楼商业</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>2.2</td><td>集中商业</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>2.3</td><td>商业综合楼</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"2\" style=\"text-align:left\">3. 公共配套</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.1</td><td>物业管理用房</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.2</td><td>儿童老年人活动场地</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td>-<td>-</td></tr>';
+  h += '<tr><td>3.3</td><td>再生资源回收站</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.4</td><td>邮件快递送达设施</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td>-<td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.5</td><td>生鲜超市</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.6</td><td>公共厕所</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.7</td><td>便利店</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.8</td><td>生活垃圾收集点</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.9</td><td>社区阅报栏</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.10</td><td>社区文化墙</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.11</td><td>图书室</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.12</td><td>公共电子阅览室</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.13</td><td>多功能室</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.14</td><td>文体活动室</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.15</td><td>商业快递综合服务站</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>3.16</td><td>住宅快递综合服务站</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">不计容建筑面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td rowspan=\"5\">其中</td><td colspan=\"2\" style=\"text-align:left\">1. 架空层</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"2\" style=\"text-align:left\">2. 地下室建筑面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>2.1</td><td>人防</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>2.2</td><td>非人防</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td>2.3</td><td>非机动车停车场</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">容积率</td><td style="text-align:center">-</td><td style="text-align:center">-</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">建筑占地面积</td><td style="text-align:center">-</td><td style="text-align:center">㎡</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">建筑密度</td><td style="text-align:center">-</td><td style="text-align:center">/</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">绿地率</td><td style="text-align:center">-</td><td style="text-align:center">%</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">建筑高度</td><td style="text-align:center">-</td><td style="text-align:center">m</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">停车位</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"1\" rowspan=\"2\">其中</td><td colspan=\"2\">地上车位</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"2\">地下车位</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"1\" rowspan=\"2\">地下车位</td><td colspan=\"2\">人防车位</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"2\">非人防车位</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">非机动车停车位</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"1\" rowspan=\"2\">其中</td><td colspan=\"2\">地上停车</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"2\">地下停车</td><td style="text-align:center">-</td><td style="text-align:center">辆</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">户数</td><td style="text-align:center">-</td><td style="text-align:center">户</td><td style="text-align:center">-</td></tr>';
+  h += '<tr><td colspan=\"3\">总人数</td><td style="text-align:center">-</td><td style="text-align:center">人</td><td style="text-align:center">-</td></tr>';
+  h += "</tbody>";
+  var colgrp = '<colgroup><col style=\"width:16%\"><col style=\"width:5%\"><col style=\"width:16%\"><col style=\"width:18%;text-align:right\"><col style=\"width:7%\"><col style=\"width:auto\"></colgroup>';
+  document.getElementById("indicatorTable").innerHTML = colgrp + h;
+}
+
+
+
+function renderResult(r) {
+  var d = function(v) { return (v != null && !isNaN(v)) ? v.toLocaleString("zh-CN", {maximumFractionDigits:0}) : "-"; };
+  var D = function(v) { return (v != null && !isNaN(v)) ? v.toLocaleString("zh-CN", {maximumFractionDigits:0}) : "-"; };
+  var b = r, l = r.land, pk = r.parking, ug = r.underground, s = r.supporting, pp = r.population, nm = r.nonmotor, inp = r.inp;
+  var nonBuild = l.land_area - l.construction_land_area;
+  var mu = (l.land_area / 666.67).toFixed(2);
+  var nonBuildMu = nonBuild > 0 ? "约" + (nonBuild / 666.67).toFixed(2) + "亩" : "";
+  var constructionMu = l.construction_land_area > 0 ? "约" + (l.construction_land_area / 666.67).toFixed(2) + "亩" : "";
+  var balanceMu = l.balance_land > 0 ? "约" + (l.balance_land / 666.67).toFixed(2) + "亩" : "";
+  var buildMu = l.build_land > 0 ? "约" + (l.build_land / 666.67).toFixed(2) + "亩" : "";
+  var comBottomPct = getVal("com_bottom",0);
+  var comCentralPct = getVal("com_central",0);
+  var comComplexPct = getVal("com_complex",0);
+  var comBottomArea = b.comArea * comBottomPct / 100;
+  var comCentralArea = b.comArea * comCentralPct / 100;
+  var comComplexArea = b.comArea * comComplexPct / 100;
+  var sptTotal = 0;
+  var sch3 = r.schools || []; for (var si=0; si<sch3.length; si++) sptTotal += sch3[si].area;
+  var cf3 = r.customFacs || []; for (var ci=0; ci<cf3.length; ci++) sptTotal += cf3[ci].area;
+  var dynF = getFacilities(pp.population, b.totalFar, b.comArea, pp.units);
+  for (var di=0; di<dynF.length; di++) sptTotal += dynF[di].area;
+  var supportCountInFar = !r.supporting || r.supporting.countInFar !== false;
+  var supportNonFarLimit = b.totalFar * 0.05;
+  var countedSupportArea = supportCountInFar ? sptTotal : Math.max(0, sptTotal - supportNonFarLimit);
+  var nonFarSupportArea = supportCountInFar ? 0 : Math.min(sptTotal, supportNonFarLimit);
+  var nonFarTotal = ug.total + nonFarSupportArea;
+
+  var distNames = {nanming:"南明区",yunyan:"云岩区",guanshanhu:"观山湖区",huaxi:"花溪区",baiyun:"白云区",jingkai:"经开区",gaoxin:"高新区"};
+  var distEl = document.getElementById("district"); var distName = distEl && distNames[distEl.value] ? distNames[distEl.value] : "";
+  var projEl = document.getElementById("project_name"); var projName = projEl ? projEl.value.trim() : "";
+  var parts = []; if (distName) parts.push(distName); if (projName) parts.push(projName); parts.push("经济技术指标表");
+  var title = parts.join(" · ");
+
+  var h = "<thead><tr><th colspan=\"6\" style=\"font-size:1rem;font-weight:700;background:#C6E0B4;padding:8px\">" + title + "</th></tr>";
+  h += "<tr><th colspan=\"3\">指标名称</th><th>指标</th><th>单位</th><th>备注</th></tr></thead><tbody>";
+  h += '<tr><td colspan=\"3\">总用地面积</td><td class=\"col-D\">'+d(l.land_area)+'</td><td style="text-align:center">㎡</td><td>约'+mu+'亩</td></tr>';
+  var nonBuildNote = nonBuild < 0 ? '<span style="color:red;font-weight:700">请检查用地规划指标</span>' : nonBuildMu;
+  h += '<tr><td colspan=\"1\" rowspan=\"4\">其中</td><td colspan=\"2\">不计容用地面积</td><td class=\"col-D\">'+d(nonBuild)+'</td><td style="text-align:center">㎡</td><td>'+nonBuildNote+'</td></tr>';
+  h += '<tr><td colspan=\"2\">建设用地面积</td><td class=\"col-D\">'+d(l.construction_land_area)+'</td><td style="text-align:center">㎡</td><td>'+constructionMu+'</td></tr>';
+  h += '<tr><td colspan=\"2\">平衡用地面积</td><td class=\"col-D\">'+d(l.balance_land)+'</td><td style="text-align:center">㎡</td><td>'+balanceMu+'</td></tr>';
+  h += '<tr><td colspan=\"2\">计容用地面积</td><td class=\"col-D\">'+d(l.build_land)+'</td><td style="text-align:center">㎡</td><td>'+buildMu+'</td></tr>';
+  h += '<tr><td colspan=\"3\">总建筑面积</td><td class=\"col-D\">'+d(b.totalBuilding)+'</td><td style="text-align:center">㎡</td><td></td></tr>';
+  h += '<tr><td colspan=\"3\">计容建筑面积</td><td class=\"col-D\">'+d(b.totalFar)+'</td><td style="text-align:center">㎡</td><td></td></tr>';
+  var cfList = r.customFacs || [];
+  var schList2 = r.schools || [];
+  var dynF2 = getFacilities(pp.population, b.totalFar, b.comArea, pp.units);
+  var supportDetailRows = 1 + cfList.length + schList2.length + dynF2.length;
+  var countedSupportRows = (!supportCountInFar && countedSupportArea > 0) ? 1 : 0;
+  var rsVal = 5 + (supportCountInFar ? supportDetailRows : countedSupportRows);
+  function supportRowsHtml(summaryNote, mainNo, summaryArea) {
+    var prefix = mainNo || '3';
+    var total = summaryArea == null ? sptTotal : summaryArea;
+    var out = '<tr><td colspan="2" style="text-align:left">'+prefix+'. 公共配套</td><td class=\"col-D\">'+d(total)+'</td><td style="text-align:center">㎡</td><td>'+summaryNote+'</td></tr>';
+    var localNum = 1;
+    for (var ssi = 0; ssi < schList2.length; ssi++) {
+      var sc = schList2[ssi];
+      out += '<tr><td>'+prefix+'.'+localNum+'</td><td>'+sc.name+'</td><td class=\"col-D\">'+d(sc.area)+'</td><td style="text-align:center">㎡</td><td>学生'+sc.students+'人，'+sc.classes+'班，用地面积'+d(sc.land)+'㎡</td></tr>';
+      localNum++;
+    }
+    for (var cfi = 0; cfi < cfList.length; cfi++) {
+      var cf = cfList[cfi];
+      out += '<tr><td>'+prefix+'.'+localNum+'</td><td>'+cf.name+'</td><td class=\"col-D\">'+d(cf.area)+'</td><td style="text-align:center">㎡</td><td></td></tr>';
+      localNum++;
+    }
+    for (var df = 0; df < dynF2.length; df++) {
+      var fc = dynF2[df];
+      out += '<tr><td>'+prefix+'.'+localNum+'</td><td>'+fc.name+'</td><td class=\"col-D\">'+d(fc.area)+'</td><td style="text-align:center">㎡</td><td>'+fc.note+'</td></tr>';
+      localNum++;
+    }
+    return out;
+  }
+  h += '<tr><td rowspan=\"'+rsVal+'\">其中</td><td colspan=\"2\" style=\"text-align:left\">1.住宅</td><td class=\"col-D\">'+d(b.resArea)+'</td><td style="text-align:center">㎡</td><td>计容占比'+(b.resArea/b.totalFar*100).toFixed(2)+'%</td></tr>';
+  h += '<tr><td colspan=\"2\" style=\"text-align:left\">2.商业</td><td class=\"col-D\">'+d(b.comArea)+'</td><td style="text-align:center">㎡</td><td>计容占比'+(b.comArea/b.totalFar*100).toFixed(2)+'%</td></tr>';
+  h += '<tr><td>2.1</td><td>裙楼商业</td><td class=\"col-D\">'+d(comBottomArea)+'</td><td style="text-align:center">㎡</td><td>计容占比'+(comBottomArea/b.totalFar*100).toFixed(2)+'%</td></tr>';
+  h += '<tr><td>2.2</td><td>集中商业</td><td class=\"col-D\">'+d(comCentralArea)+'</td><td style="text-align:center">㎡</td><td>计容占比'+(comCentralArea/b.totalFar*100).toFixed(2)+'%</td></tr>';
+  h += '<tr><td>2.3</td><td>商业综合楼</td><td class=\"col-D\">'+d(comComplexArea)+'</td><td style="text-align:center">㎡</td><td>计容占比'+(comComplexArea/b.totalFar*100).toFixed(2)+'%</td></tr>';
+  if (supportCountInFar) h += supportRowsHtml('计容占比'+(sptTotal/b.totalFar*100).toFixed(2)+'%', '3');
+  if (!supportCountInFar && countedSupportArea > 0) h += '<tr><td colspan=\"2\" style=\"text-align:left\">3. 计容配套</td><td class=\"col-D\">'+d(countedSupportArea)+'</td><td style="text-align:center">㎡</td><td>配套面积超出计容面积5%不计容上限部分</td></tr>';
+  h += '<tr><td colspan=\"3\">不计容建筑面积</td><td class=\"col-D\">'+d(nonFarTotal)+'</td><td style="text-align:center">㎡</td><td></td></tr>';
+  var nonFarRows = 5 + (supportCountInFar ? 0 : supportDetailRows);
+  if (!supportCountInFar) {
+    h += '<tr><td rowspan=\"'+nonFarRows+'\">其中</td>' + supportRowsHtml('计容占比'+(nonFarSupportArea/b.totalFar*100).toFixed(2)+'%（配套不计容，不参与容积率计算）', '1', nonFarSupportArea).replace('<tr>', '');
+  }
+  if (supportCountInFar) {
+    h += '<tr><td rowspan=\"'+nonFarRows+'\">其中</td><td colspan=\"2\" style=\"text-align:left\">1. 架空层</td><td class="col-D">0</td><td style="text-align:center">㎡</td><td></td></tr>';
+  } else {
+    h += '<tr><td colspan=\"2\" style=\"text-align:left\">2. 架空层</td><td class="col-D">0</td><td style="text-align:center">㎡</td><td></td></tr>';
+  }
+  var basementNo = supportCountInFar ? '2' : '3';
+  h += '<tr><td colspan=\"2\" style=\"text-align:left\">'+basementNo+'. 地下室建筑面积</td><td class=\"col-D\">'+d(ug.total)+'</td><td style="text-align:center">㎡</td><td></td></tr>';
+  h += '<tr><td>'+basementNo+'.1</td><td>人防</td><td class=\"col-D\">'+d(ug.civilArea)+'</td><td style="text-align:center">㎡</td><td>按总计容面积'+inp.park_civil_ratio+'%</td></tr>';
+  h += '<tr><td>'+basementNo+'.2</td><td>非人防</td><td class=\"col-D\">'+d(ug.nonCivilArea)+'</td><td style="text-align:center">㎡</td><td>按'+inp.park_non_civil_per+'m²/车位</td></tr>';
+  h += '<tr><td>'+basementNo+'.3</td><td>非机动车停车场</td><td class=\"col-D\">'+d(nm.area)+'</td><td style="text-align:center">㎡</td><td>1.5㎡/1辆</td></tr>';
+  h += '<tr><td colspan=\"3\">容积率</td><td class="col-D">'+inp.far.toFixed(1)+'</td><td style="text-align:center">/</td><td></td></tr>';
+  h += '<tr><td colspan=\"3\">建筑占地面积</td><td class=\"col-D\">'+d(l.footprint)+'</td><td style="text-align:center">㎡</td><td></td></tr>';
+  h += '<tr><td colspan=\"3\">建筑密度</td><td class="col-D">'+inp.building_density.toFixed(2)+'%</td><td style="text-align:center">%</td><td></td></tr>';
+  h += '<tr><td colspan=\"3\">绿地率</td><td class="col-D">'+inp.green_ratio.toFixed(1)+'%</td><td style="text-align:center">%</td><td></td></tr>';
+  h += '<tr><td colspan=\"3\">建筑高度</td><td class=\"col-D\">'+D(inp.height_limit)+'</td><td style="text-align:center">m</td><td></td></tr>';
+  h += '<tr><td colspan=\"3\">停车位</td><td class=\"col-D\">'+D(pk.total)+'</td><td style="text-align:center">辆</td><td>住宅x'+inp.park_res_std+'/100㎡+商业x'+inp.park_com_std+'/100㎡+配套x'+inp.park_spt_std+'/100㎡</td></tr>';
+  h += '<tr><td colspan=\"1\" rowspan=\"2\">其中</td><td colspan=\"2\">地上车位</td><td class=\"col-D\">'+D(pk.ground)+'</td><td style="text-align:center">辆</td><td>总车位数的'+inp.park_ground_ratio+'%</td></tr>';
+  h += '<tr><td colspan=\"2\">地下车位</td><td class=\"col-D\">'+D(pk.underground)+'</td><td style="text-align:center">辆</td><td></td></tr>';
+  h += '<tr><td colspan=\"1\" rowspan=\"2\">地下车位</td><td colspan=\"2\">人防车位</td><td class=\"col-D\">'+D(ug.civilPark)+'</td><td style="text-align:center">辆</td><td>人防车位按'+inp.park_civil_per+'m²/车位</td></tr>';
+  h += '<tr><td colspan=\"2\">非人防车位</td><td class=\"col-D\">'+D(ug.nonCivilPark)+'</td><td style="text-align:center">辆</td><td>非人防车位按'+inp.park_non_civil_per+'m²/车位</td></tr>';
+  h += '<tr><td colspan=\"3\">非机动车停车位</td><td class=\"col-D\">'+D(nm.total)+'</td><td style="text-align:center">辆</td><td>'+inp.park_nonmotor_ratio+'辆非机动车位/户</td></tr>';
+  h += '<tr><td colspan=\"1\" rowspan=\"2\">其中</td><td colspan=\"2\">地上停车</td><td class=\"col-D\">'+D(nm.ground)+'</td><td style="text-align:center">辆</td><td></td></tr>';
+  h += '<tr><td colspan=\"2\">地下停车</td><td class=\"col-D\">'+D(nm.underground)+'</td><td style="text-align:center">辆</td><td></td></tr>';
+  h += '<tr><td colspan=\"3\">户数</td><td class=\"col-D\">'+D(pp.units)+'</td><td style="text-align:center">户</td><td></td></tr>';
+  h += '<tr><td colspan=\"3\">总人数</td><td class=\"col-D\">'+D(pp.population)+'</td><td style="text-align:center">人</td><td>'+pp.personsPerHH+'人/户</td></tr>';
+  h += "</tbody>";
+  var colgrp = '<colgroup><col style=\"width:16%\"><col style=\"width:5%\"><col style=\"width:16%\"><col style=\"width:18%;text-align:right\"><col style=\"width:7%\"><col style=\"width:auto\"></colgroup>';
+  document.getElementById("indicatorTable").innerHTML = colgrp + h;
+}
+
+// === 初始化 ===
+renderEmptyTable();
+updateProducts();
+// === Excel 导出 ===
+var _xlsxReady = false, _xlsxLoading = false;
+var XLSX_CDN = 'https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js';
+function loadXLSX() {
+  return new Promise(function(resolve) {
+    if (window.XLSX) { _xlsxReady = true; return resolve(); }
+    if (_xlsxLoading) { var chk = setInterval(function() { if (window.XLSX) { clearInterval(chk); resolve(); } }, 100); return; }
+    _xlsxLoading = true;
+    var s = document.createElement('script');
+    s.src = XLSX_CDN;
+    s.onload = function() { _xlsxReady = true; _xlsxLoading = false; resolve(); };
+    s.onerror = function() { _xlsxLoading = false; resolve(); };
+    document.head.appendChild(s);
+  });
+}
+
+async function exportExcel() {
+  var r = window._lastResult;
+  if (!r) { alert('请先点击计算'); return; }
+  var btn = document.getElementById('exportBtn');
+  btn.textContent = '加载中...'; btn.disabled = true;
+  btn.textContent = '导出 Excel'; btn.disabled = false;
+
+  var rows = [];
+  // Title
+  var distNames = {nanming:'南明区',yunyan:'云岩区',guanshanhu:'观山湖区',huaxi:'花溪区',baiyun:'白云区',jingkai:'经开区',gaoxin:'高新区'};
+  var distEl = document.getElementById('district');
+  var dn = distEl && distNames[distEl.value] ? distNames[distEl.value] : '';
+  var pnEl = document.getElementById('project_name');
+  var pn = pnEl ? pnEl.value.trim() : '';
+  var t = []; if (dn) t.push(dn); if (pn) t.push(pn); t.push('经济技术指标表');
+  rows.push([t.join(' · '),'','','','','']);
+  rows.push(['指标名称','','','指标','单位','备注']);
+
+  function A(a,b,c,d,e,f) { rows.push([a||'',b||'',c||'',d!=null?d:'',e||'',f||'']); }
+  var b=r, l=r.land, pk=r.parking, ug=r.underground, s=r.supporting, pp=r.population, nm=r.nonmotor, inp=r.inp;
+  var nonBuild = l.land_area - l.construction_land_area;
+  var mu = (l.land_area/666.67).toFixed(2);
+  var comBP = getVal('com_bottom',0), comCP = getVal('com_central',0), comXP = getVal('com_complex',0);
+  var comBA = b.comArea*comBP/100, comCA = b.comArea*comCP/100, comXA = b.comArea*comXP/100;
+
+  A('总用地面积','','',l.land_area,'㎡','约'+mu+'亩');
+  A('其中','','不计容用地面积',nonBuild,'㎡',nonBuild>0?'约'+(nonBuild/666.67).toFixed(2)+'亩':'');
+  A('','','建设用地面积',l.construction_land_area,'㎡','约'+(l.construction_land_area/666.67).toFixed(2)+'亩');
+  A('','','平衡用地面积',l.balance_land,'㎡',l.balance_land>0?'约'+(l.balance_land/666.67).toFixed(2)+'亩':'');
+  A('','','计容用地面积',l.build_land,'㎡','约'+(l.build_land/666.67).toFixed(2)+'亩');
+  A('总建筑面积','','',b.totalBuilding,'㎡','');
+  A('计容建筑面积','','',b.totalFar,'㎡','');
+  A('其中','1.','住宅',b.resArea,'㎡',(b.resArea/b.totalFar*100).toFixed(2)+'%');
+  A('','2.','商业',b.comArea,'㎡',(b.comArea/b.totalFar*100).toFixed(2)+'%');
+  A('','2.1','裙楼商业',comBA,'㎡',(comBA/b.totalFar*100).toFixed(2)+'%');
+  A('','2.2','集中商业',comCA,'㎡',(comCA/b.totalFar*100).toFixed(2)+'%');
+  A('','2.3','商业综合楼',comXA,'㎡',(comXA/b.totalFar*100).toFixed(2)+'%');
+  var schs = r.schools || [], cfs = r.customFacs || [];
+  var dynFacsExport = getFacilities(pp.population, b.totalFar, b.comArea, pp.units);
+  var sptT = 0;
+  for (var si=0; si<schs.length; si++) sptT += schs[si].area;
+  for (var ci=0; ci<cfs.length; ci++) sptT += cfs[ci].area;
+  for (var di=0; di<dynFacsExport.length; di++) sptT += dynFacsExport[di].area;
+  var supportCountInFarExport = !r.supporting || r.supporting.countInFar !== false;
+  var supportNonFarLimitExport = b.totalFar * 0.05;
+  var countedSupportExport = supportCountInFarExport ? sptT : Math.max(0, sptT - supportNonFarLimitExport);
+  var nonFarSupportExport = supportCountInFarExport ? 0 : Math.min(sptT, supportNonFarLimitExport);
+  function appendSupportExport(summaryNote, mainNo, groupLabel, summaryArea) {
+    var prefix = mainNo || '3';
+    var total = summaryArea == null ? sptT : summaryArea;
+    A(groupLabel || '', prefix + '.','公共配套',total,'㎡',summaryNote);
+    var n = 1;
+    for (var si=0; si<schs.length; si++) { var sc=schs[si]; A('',prefix+'.'+n,sc.name,sc.area,'㎡','学生'+sc.students+'人，'+sc.classes+'班，用地面积'+sc.land+'㎡'); n++; }
+    for (var ci=0; ci<cfs.length; ci++) { var cf=cfs[ci]; A('',prefix+'.'+n,cf.name,cf.area,'㎡',''); n++; }
+    for (var di=0; di<dynFacsExport.length; di++) { var fc=dynFacsExport[di]; A('',prefix+'.'+n,fc.name,fc.area,'㎡',fc.note); n++; }
+  }
+  if (supportCountInFarExport) appendSupportExport((sptT/b.totalFar*100).toFixed(2)+'%', '3');
+  if (!supportCountInFarExport && countedSupportExport > 0) A('','3.','计容配套',countedSupportExport,'㎡','配套面积超出计容面积5%不计容上限部分');
+  A('不计容建筑面积','','',ug.total + nonFarSupportExport,'㎡','');
+  if (!supportCountInFarExport) appendSupportExport((nonFarSupportExport/b.totalFar*100).toFixed(2)+'%（配套不计容，不参与容积率计算）', '1', '其中', nonFarSupportExport);
+  A(supportCountInFarExport ? '其中' : '', supportCountInFarExport ? '1.' : '2.','架空层',0,'㎡','');
+  var basementExportNo = supportCountInFarExport ? '2' : '3';
+  A('',basementExportNo + '.','地下室建筑面积',ug.total,'㎡','');
+  A('',basementExportNo + '.1','人防',ug.civilArea,'㎡','按总计容面积'+inp.park_civil_ratio+'%');
+  A('',basementExportNo + '.2','非人防',ug.nonCivilArea,'㎡','按'+inp.park_non_civil_per+'m²/车位');
+  A('',basementExportNo + '.3','非机动车停车场',nm.area,'㎡','1.5㎡/1辆');
+  A('容积率','','',inp.far,'/','');
+  A('建筑占地面积','','',l.footprint,'㎡','');
+  A('建筑密度','','',inp.building_density.toFixed(2)+'%','%','');
+  A('绿地率','','',inp.green_ratio.toFixed(1)+'%','%','');
+  A('建筑高度','','',inp.height_limit,'m','');
+  A('停车位','','',pk.total,'辆','住宅x'+inp.park_res_std+'/100㎡+商业x'+inp.park_com_std+'/100㎡+配套x'+inp.park_spt_std+'/100㎡');
+  A('其中','','地上车位',pk.ground,'辆','总车位数的'+inp.park_ground_ratio+'%');
+  A('','','地下车位',pk.underground,'辆','');
+  A('地下车位','','人防车位',ug.civilPark,'辆','人防车位按'+inp.park_civil_per+'m²/车位');
+  A('','','非人防车位',ug.nonCivilPark,'辆','非人防车位按'+inp.park_non_civil_per+'m²/车位');
+  A('非机动车停车位','','',nm.total,'辆',inp.park_nonmotor_ratio+'辆非机动车位/户');
+  A('其中','','地上停车',nm.ground,'辆','');
+  A('','','地下停车',nm.underground,'辆','');
+  A('户数','','',pp.units,'户','');
+  A('总人数','','',pp.population,'人',pp.personsPerHH+'人/户');
+
+  // HTML导出 (边框+表头+横向/纵向合并)
+  var s = '<style>td,th{border:1px solid #999;padding:3px 6px;font-size:11pt;vertical-align:middle}th{background:#e8ecf0;font-weight:bold;text-align:center}.r{text-align:right}.c{text-align:center}.l{text-align:left;font-size:9pt}.t{font-size:14pt;background:#C6E0B4}.txt{mso-number-format:"\\@";}</style>';
+  var h = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="UTF-8">' + s + '</head><body><table>';
+  var firstColRowspan = {};
+  var firstColCovered = {};
+  for (var mi = 2; mi < rows.length; mi++) {
+    if (rows[mi][0] == null || String(rows[mi][0]).trim() === '') continue;
+    var ms = 1;
+    for (var mj = mi + 1; mj < rows.length; mj++) {
+      if (rows[mj][0] != null && String(rows[mj][0]).trim() !== '') break;
+      ms++;
+    }
+    if (ms > 1) {
+      firstColRowspan[mi] = ms;
+      for (var mk = mi + 1; mk < mi + ms; mk++) firstColCovered[mk] = true;
+    }
+  }
+  function escXls(v) {
+    return v != null ? String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;') : '';
+  }
+  function xlsCell(tag, value, cls, extra) {
+    return '<' + tag + (cls ? ' class="' + cls + '"' : '') + (extra || '') + '>' + escXls(value) + '</' + tag + '>';
+  }
+  for (var ri = 0; ri < rows.length; ri++) {
+    h += '<tr>'; var row = rows[ri];
+    if (ri === 0) { h += xlsCell('th', row[0] || '', 't', ' colspan="6"'); h += '</tr>'; continue; }
+    for (var ci = 0; ci < row.length; ci++) {
+      if (ci === 0 && firstColCovered[ri]) continue;
+      if (ci === 1 && row[1] != null && /^\d+\.$/.test(String(row[1]).trim()) && row[2] != null && String(row[2]).trim() !== '') {
+        var tagMain = (ri === 1) ? 'th' : 'td';
+        h += xlsCell(tagMain, String(row[1]).trim() + String(row[2]).trim(), 'c txt', ' colspan="2"');
+        ci = 2;
+        continue;
+      }
+      if (ci === 1 && (row[1] == null || String(row[1]).trim() === '') && row[2] != null && String(row[2]).trim() !== '') {
+        var tagSub = (ri === 1) ? 'th' : 'td';
+        h += xlsCell(tagSub, row[2], 'c', ' colspan="2"');
+        ci = 2;
+        continue;
+      }
+      var v = row[ci] != null ? String(row[ci]) : '';
+      var cs = 1;
+      var allowColspan = !(ci === 0 && firstColRowspan[ri]);
+      if (allowColspan && v !== '' && ci < 2) { for (var cj = ci+1; cj < row.length && cj < 3; cj++) { if (row[cj] == null || String(row[cj]).trim() === '') cs++; else break; } }
+      var tag = (ri === 1) ? 'th' : 'td';
+      var cl = ci === 3 ? 'r' : ci === 5 ? 'l' : 'c';
+      if ((ci === 1 || ci === 2) && v !== '' && /^\d+(\.\d+)?$/.test(v)) cl += ' txt';
+      var extra = '';
+      if (cs > 1) extra += ' colspan="' + cs + '"';
+      if (ci === 0 && firstColRowspan[ri]) extra += ' rowspan="' + firstColRowspan[ri] + '"';
+      h += xlsCell(tag, v, cl, extra);
+      if (cs > 1) ci += cs - 1;
+    }
+    h += '</tr>';
+  }
+  h += '</table></body></html>';
+  var blob = new Blob([h], { type: 'application/vnd.ms-excel;charset=utf-8' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = '经济技术指标表.xls';
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+}
+
+// === 户配表 ===
+function refreshHP() {
+  var el = document.getElementById('hpArea');
+  if (!el || el.style.display === 'none') return;
+  var rows = [];
+  var items = [
+    {name:'T4高层', pct:'res_t4', subs:['t4a','t4b']},
+    {name:'T3高层', pct:'res_t3', subs:['t3a','t3b']},
+    {name:'T2高层', pct:'res_t2h'}, {name:'T2小高层', pct:'res_t2m'},
+    {name:'T2洋房', pct:'res_yf'}, {name:'别墅', pct:'res_bs'}
+  ];
+  var areaSum = 0, unitSum = 0;
+  for (var pi = 0; pi < items.length; pi++) {
+    var it = items[pi];
+    var pct = getVal(it.pct, 0);
+    var areaEl = document.getElementById('area_' + it.pct.replace('res_',''));
+    var areaText = areaEl ? areaEl.textContent : '-';
+    var areaVal = 0;
+    var m = areaText.match(/[0-9,]+/);
+    if (m) areaVal = parseFloat(m[0].replace(/,/g,''));
+    var units = 0;
+    if (it.subs) {
+      for (var si = 0; si < it.subs.length; si++) {
+        var uEl = document.getElementById('units_' + it.subs[si]);
+        var t = uEl ? uEl.textContent : '-';
+        var um = t.match(/[0-9,]+/);
+        if (um) units += parseFloat(um[0].replace(/,/g,''));
+      }
+    } else {
+      var uEl2 = document.getElementById('units_' + it.pct.replace('res_',''));
+      var t2 = uEl2 ? uEl2.textContent : '-';
+      var um2 = t2.match(/[0-9,]+/);
+      if (um2) units = parseFloat(um2[0].replace(/,/g,''));
+    }
+    if (pct > 0) {
+      areaSum += areaVal;
+      unitSum += units;
+      rows.push({name:it.name, area:areaVal, units:units, isMain:true});
+      if (it.subs) {
+        for (var si = 0; si < it.subs.length; si++) {
+          var subEl = document.getElementById('area_' + it.subs[si]);
+          var subAText = subEl ? subEl.textContent : '-';
+          var subArea = 0;
+          var sm = subAText.match(/[0-9,]+/);
+          if (sm) subArea = parseFloat(sm[0].replace(/,/g,''));
+          var subUEl2 = document.getElementById('units_' + it.subs[si]);
+          var subUText = subUEl2 ? subUEl2.textContent : '-';
+          var subUnits = 0;
+          var sum = subUText.match(/[0-9,]+/);
+          if (sum) subUnits = parseFloat(sum[0].replace(/,/g,''));
+          rows.push({name:'  '+it.subs[si].toUpperCase(), area:subArea, units:subUnits, isMain:false});
+        }
+      }
+    }
+  }
+  var h = '<div class="card" style="margin-bottom:12px"><h2>产品配置表 <span style="font-weight:400;font-size:0.8rem;color:var(--muted)">总户数：'+unitSum.toLocaleString('zh-CN')+'户，总面积：'+areaSum.toLocaleString('zh-CN')+'㎡，户均面积：'+(unitSum>0?Math.round(areaSum/unitSum).toLocaleString('zh-CN'):'-')+'㎡</span></h2>';
+  h += '<table class="prod-table" style="font-size:0.75rem"><thead><tr><th class="th-name">产品</th><th class="th-area">户均面积(㎡)</th><th class="th-units">户数(户)</th><th class="th-area">面积(㎡)</th><th class="th-units">占比(%)</th></tr></thead><tbody>';
+  // 找到最后一个有户数的主产品，用于凑整100%
+  var lastMainIdx = -1;
+  for (var ri = rows.length - 1; ri >= 0; ri--) {
+    if (unitSum > 0 && rows[ri].units > 0 && rows[ri].isMain) { lastMainIdx = ri; break; }
+  }
+  var cumPct = 0;
+  for (var ri = 0; ri < rows.length; ri++) {
+    var rw = rows[ri];
+    var pctStr = '-';
+    if (unitSum > 0 && rw.units > 0) {
+      var pctVal;
+      if (rw.isMain) {
+        // 主产品参与凑整
+        if (ri === lastMainIdx) {
+          pctVal = Math.max(0, 100 - cumPct);
+        } else {
+          pctVal = rw.units / unitSum * 100;
+          cumPct += pctVal;
+        }
+      } else {
+        // 子产品独立计算
+        pctVal = rw.units / unitSum * 100;
+      }
+      pctStr = pctVal.toFixed(1) + '%';
+    }
+    var rowBg = rw.isMain ? ' style="background:#f5f3f0"' : '';
+    var avgUnitSize = rw.units > 0 ? Math.round(rw.area / rw.units) : 0;
+    h += '<tr'+rowBg+'><td class="td-name'+(rw.isMain?'':' sub')+'">'+rw.name+'</td><td class="td-area">'+(avgUnitSize>0?avgUnitSize.toLocaleString('zh-CN'):'-')+'</td><td class="td-units">'+(rw.units>0?rw.units.toLocaleString('zh-CN'):'-')+'</td><td class="td-area">'+(rw.area>0?rw.area.toLocaleString('zh-CN'):'-')+'</td><td class="td-units">'+pctStr+'</td></tr>';
+  }
+  h += '</tbody></table></div>';
+  el.innerHTML = h;
+}
+
+function toggleHP() {
+  var el = document.getElementById('hpArea');
+  if (!el) return;
+  if (el.innerHTML === '') {
+    if (!window._lastResult && typeof quickAnalyze === 'function') quickAnalyze();
+    if (typeof updateProducts === 'function') updateProducts();
+    el.style.display = 'block';
+    refreshHP();
+    scrollToModule(el);
+    return;
+  }
+  el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+  if (el.style.display === 'block') scrollToModule(el);
+}
+
+function quickAnalyze() {
+  var inp = {
+    land_area: getVal('land_area', 50000),
+    construction_land_area: getVal('construction_land_area', 50000) || getVal('land_area', 50000),
+    far: getVal('far', 2.5),
+    building_density: getVal('building_density', 22),
+    green_ratio: getVal('green_ratio', 35),
+    height_limit: getVal('height_limit', 80),
+    planned_commercial_ratio: getVal('planned_commercial_ratio', 10),
+  };
+  var balanceLand = getVal('balance_land_area', 0);
+  var buildLand = inp.construction_land_area + balanceLand;
+  var totalFar = buildLand * inp.far;
+  var comRatio = inp.planned_commercial_ratio / 100;
+  var comArea = totalFar * comRatio;
+  var resArea = totalFar - comArea;
+  // 按产品配置计算户数
+  var totalUnits = 0;
+  (function() {
+    var area = resArea;
+    function cu(id, pct, us) { var a = area * pct / 100; if (us > 0) totalUnits += Math.round(a / us); }
+    function csg(pct, sa, sb, ua, ub) {
+      var a = area * pct / 100;
+      var spA = getVal('split_' + sa, 50), spB = getVal('split_' + sb, 50), ts = spA + spB;
+      if (ts === 0 || a <= 0 || ua <= 0 || ub <= 0) return;
+      var wu = (ua * spA + ub * spB) / ts;
+      totalUnits += Math.round(a / wu);
+    }
+    csg(getVal('res_t4',0), 't4a', 't4b', getVal('unit_t4a',0), getVal('unit_t4b',0));
+    csg(getVal('res_t3',0), 't3a', 't3b', getVal('unit_t3a',0), getVal('unit_t3b',0));
+    cu('t2h', getVal('res_t2h',0), getVal('unit_t2h',0));
+    cu('t2m', getVal('res_t2m',0), getVal('unit_t2m',0));
+    cu('yf', getVal('res_yf',0), getVal('unit_yf',0));
+    cu('bs', getVal('res_bs',0), getVal('unit_bs',0));
+  })();
+  window._lastResult = {
+    land: { land_area: inp.land_area, construction_land_area: inp.construction_land_area, build_land: buildLand, balance_land: balanceLand },
+    totalFar: totalFar, resArea: resArea, comArea: comArea,
+    population: { units: totalUnits, population: totalUnits * 2.7, personsPerHH: 2.7 },
+    schools: [],
+    inp: inp
+  };
+}
+
+function toggleBuildingAnalysis() {
+  var el = document.getElementById('buildingAnalysisArea');
+  if (!el) return;
+  if (el.innerHTML === '') {
+    if (!window._lastResult && typeof quickAnalyze === 'function') quickAnalyze();
+    if (typeof analyzeBuildings === 'function') analyzeBuildings();
+    el.style.display = 'block';
+    scrollToModule(el);
+    return;
+  }
+  el.style.display = (el.style.display === 'block') ? 'none' : 'block';
+  if (el.style.display === 'block') scrollToModule(el);
+}
+
+function toggleSensStep(prefix) {
+  var curStep = window['_sensStep_' + prefix] || 100;
+  var newStep = (curStep === 100) ? 200 : 100;
+  window['_sensStep_' + prefix] = newStep;
+  for (var i = 1; i <= 5; i++) {
+    var dEl = document.getElementById(prefix + '_d' + i);
+    var uEl = document.getElementById(prefix + '_u' + i);
+    if (dEl) dEl.value = -i * newStep;
+    if (uEl) uEl.value = i * newStep;
+  }
+  if (typeof runProjectCalc === 'function') runProjectCalc();
+}
+
+function applySensStep(prefix) {
+  var stepEl = document.getElementById(prefix + '_step');
+  var step = stepEl ? parseFloat(stepEl.value) : 100;
+  if (!step || step <= 0) step = 100;
+  var grpEl = document.getElementById(prefix + '_groups');
+  var groups = grpEl ? parseInt(grpEl.value) : 5;
+  window['_sensStep_' + prefix] = step;
+  window['_sensGroups_' + prefix] = groups;
+  for (var i = 1; i <= groups; i++) {
+    var dEl = document.getElementById(prefix + '_d' + i);
+    var uEl = document.getElementById(prefix + '_u' + i);
+    if (dEl) dEl.value = -i * step;
+    if (uEl) uEl.value = i * step;
+  }
+  if (typeof runProjectCalc === 'function') runProjectCalc();
+}
+
+function toggleProjectCalc() {
+  var el = document.getElementById('projectCalcArea');
+  if (!el) return;
+  if (el.style.display === 'block') { el.style.display = 'none'; return; }
+  if ((!window._lastResult || !window._fullCalculated || !window._lastResult.parking) && typeof calculate === 'function') calculate();
+  try {
+    if (typeof runProjectCalc === 'function') runProjectCalc();
+  } catch(e) { alert('项目测算错误: ' + e.message); }
+  try {
+    if (typeof runDetailedLAT === 'function') runDetailedLAT();
+  } catch(e) { alert('详细土增错误: ' + e.message); }
+  el.style.display = 'block';
+  scrollToModule(el);
+}
+
+// === 项目管理 ===
+var PROJECTS_KEY = 'guiyang_projects';
+
+var INPUT_IDS = [
+  'land_area','construction_land_area','balance_land_area','far','building_density','green_ratio','height_limit',
+  'district','planned_commercial_ratio','project_name',
+  'res_t4','res_t3','res_t2h','res_t2m','res_yf','res_bs',
+  'split_t4a','split_t4b','split_t3a','split_t3b',
+  'unit_t4a','unit_t4b','unit_t3a','unit_t3b','unit_t2h','unit_t2m','unit_yf','unit_bs',
+  'com_bottom','com_central','com_complex',
+  'kinder_rate','kinder_per_class','kinder_area_per','kinder_land_per',
+  'primary_rate','primary_per_class','primary_area_per','primary_land_per',
+  'middle_rate','middle_per_class','middle_area_per','middle_land_per',
+  'custom_name_1','custom_area_1','custom_name_2','custom_area_2','custom_name_3','custom_area_3',
+  'park_res_std','park_com_std','park_spt_std','park_ground_ratio','park_civil_ratio','park_civil_per','park_non_civil_per','park_nonmotor_ratio','hh_custom'
+];
+
+var CHECKBOX_IDS = ['near_metro','school_kinder','school_primary','school_middle','custom_fac_1','custom_fac_2','custom_fac_3','facility_count_in_far'];
+
+function togglePanel(id) {
+  var el = document.getElementById(id);
+  if (!el) return;
+  if (el.style.display === 'none') {
+    el.style.display = 'block';
+    if (id === 'projPanel') refreshProjList();
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+function getAllInputs() {
+  var data = {};
+  for (var i = 0; i < INPUT_IDS.length; i++) {
+    var el = document.getElementById(INPUT_IDS[i]);
+    if (el) data[INPUT_IDS[i]] = el.value;
+  }
+  for (var j = 0; j < CHECKBOX_IDS.length; j++) {
+    var cb = document.getElementById(CHECKBOX_IDS[j]);
+    if (cb) data[CHECKBOX_IDS[j]] = cb.checked;
+  }
+  // radio: hh_size
+  var hhRadio = document.querySelector('input[name="hh_size"]:checked');
+  data['hh_size'] = hhRadio ? hhRadio.value : '2.7';
+  return data;
+}
+
+function restoreInputs(data) {
+  if (!data) return;
+  for (var i = 0; i < INPUT_IDS.length; i++) {
+    var el = document.getElementById(INPUT_IDS[i]);
+    if (el && data[INPUT_IDS[i]] != null) el.value = data[INPUT_IDS[i]];
+  }
+  for (var j = 0; j < CHECKBOX_IDS.length; j++) {
+    var cb = document.getElementById(CHECKBOX_IDS[j]);
+    if (cb && data[CHECKBOX_IDS[j]] != null) cb.checked = data[CHECKBOX_IDS[j]];
+  }
+  // radio: hh_size
+  if (data['hh_size']) {
+    var hhRadios = document.querySelectorAll('input[name="hh_size"]');
+    for (var k = 0; k < hhRadios.length; k++) {
+      if (hhRadios[k].value === data['hh_size']) { hhRadios[k].checked = true; break; }
+    }
+  }
+  // 亩换算提示
+  updateProducts();
+}
+
+function getProjects() {
+  try {
+    var raw = localStorage.getItem(PROJECTS_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch(e) { return []; }
+}
+
+function saveProjects(projects) {
+  try {
+    localStorage.setItem(PROJECTS_KEY, JSON.stringify(projects));
+  } catch(e) {
+    var msg = document.getElementById('projMsg');
+    if (msg) { msg.textContent = '存储空间不足，请导出备份后清理旧项目'; msg.style.color = 'var(--red)'; }
+  }
+}
+
+function saveProject() {
+  var nameEl = document.getElementById('projName');
+  var name = nameEl ? nameEl.value.trim() : '';
+  if (!name) {
+    var projNameEl = document.getElementById('project_name');
+    name = projNameEl ? projNameEl.value.trim() : '';
+    if (!name) { alert('请输入项目名称'); return; }
+    if (nameEl) nameEl.value = name;
+  }
+  var inputs = getAllInputs();
+  var result = window._lastResult || null;
+  var projects = getProjects();
+  var now = new Date();
+  var ts = now.getFullYear()+'-'+
+    String(now.getMonth()+1).padStart(2,'0')+'-'+
+    String(now.getDate()).padStart(2,'0')+' '+
+    String(now.getHours()).padStart(2,'0')+':'+
+    String(now.getMinutes()).padStart(2,'0');
+  // 查找同名项目，有则更新
+  var existing = -1;
+  for (var p = 0; p < projects.length; p++) {
+    if (projects[p].name === name) { existing = p; break; }
+  }
+  var proj = { id: Date.now().toString(), name: name, createdAt: ts, updatedAt: ts, inputs: inputs, result: result };
+  if (existing >= 0) {
+    proj.id = projects[existing].id;
+    proj.createdAt = projects[existing].createdAt;
+    projects[existing] = proj;
+  } else {
+    projects.push(proj);
+  }
+  // 按更新时间倒序
+  projects.sort(function(a,b){ return b.id.localeCompare(a.id); });
+  saveProjects(projects);
+  var msg = document.getElementById('projMsg');
+  if (msg) { msg.textContent = '已保存: ' + name + ' (' + ts + ')'; msg.style.color = 'var(--green)'; }
+  refreshProjList();
+}
+
+function loadProject(id) {
+  var projects = getProjects();
+  for (var i = 0; i < projects.length; i++) {
+    if (projects[i].id === id) {
+      restoreInputs(projects[i].inputs);
+      window._lastResult = projects[i].result;
+      updateProducts();
+      if (window._lastResult) {
+        renderResult(window._lastResult);
+      } else {
+        calculate();
+      }
+      var msg = document.getElementById('projMsg');
+      if (msg) { msg.textContent = '已加载: ' + projects[i].name; msg.style.color = 'var(--accent)'; }
+      return;
+    }
+  }
+}
+
+function deleteProject(id) {
+  if (!confirm('确定删除此项目？此操作不可恢复。')) return;
+  var projects = getProjects();
+  projects = projects.filter(function(p){ return p.id !== id; });
+  saveProjects(projects);
+  refreshProjList();
+  var msg = document.getElementById('projMsg');
+  if (msg) { msg.textContent = '已删除'; msg.style.color = 'var(--muted)'; }
+}
+
+function refreshProjList() {
+  var el = document.getElementById('projList');
+  if (!el) return;
+  var projects = getProjects();
+  if (projects.length === 0) {
+    el.innerHTML = '<div style="font-size:0.75rem;color:var(--muted);padding:8px">暂无保存的项目</div>';
+    return;
+  }
+  var h = '';
+  for (var i = 0; i < projects.length; i++) {
+    var p = projects[i];
+    h += '<div class="proj-item">';
+    h += '<span class="name" onclick="loadProject(\''+p.id+'\')" title="点击加载">'+escHtml(p.name)+'</span>';
+    h += '<span style="display:flex;align-items:center;gap:8px">';
+    h += '<span class="time">'+escHtml(p.updatedAt)+'</span>';
+    h += '<button class="btn btn-red" onclick="deleteProject(\''+p.id+'\')">删</button>';
+    h += '</span></div>';
+  }
+  el.innerHTML = h;
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function exportProjects() {
+  var projects = getProjects();
+  if (projects.length === 0) { alert('暂无项目可导出'); return; }
+  var blob = new Blob([JSON.stringify(projects, null, 2)], {type: 'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = '贵阳项目备份_' + new Date().toISOString().slice(0,10) + '.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  var msg = document.getElementById('projMsg');
+  if (msg) { msg.textContent = '已导出 ' + projects.length + ' 个项目'; msg.style.color = 'var(--green)'; }
+}
+
+function importProjects(event) {
+  var file = event.target.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var data = JSON.parse(e.target.result);
+      if (!Array.isArray(data)) { alert('文件格式不正确'); return; }
+      var existing = getProjects();
+      var merged = {};
+      // 先用已有项目建索引
+      for (var i = 0; i < existing.length; i++) merged[existing[i].id] = existing[i];
+      // 导入的覆盖同ID
+      var imported = 0, updated = 0;
+      for (var j = 0; j < data.length; j++) {
+        if (data[j].id && data[j].name) {
+          if (merged[data[j].id]) updated++; else imported++;
+          merged[data[j].id] = data[j];
+        }
+      }
+      var result = [];
+      var keys = Object.keys(merged);
+      for (var k = 0; k < keys.length; k++) result.push(merged[keys[k]]);
+      result.sort(function(a,b){ return b.id.localeCompare(a.id); });
+      saveProjects(result);
+      refreshProjList();
+      var msg = document.getElementById('projMsg');
+      if (msg) { msg.textContent = '已导入，新增'+imported+'个，更新'+updated+'个'; msg.style.color = 'var(--green)'; }
+    } catch(ex) {
+      alert('文件解析失败: ' + ex.message);
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+}
+
+// 页面加载时渲染项目列表
+refreshProjList();
+initFacilityRulesFromJson();
+
+console.log("就绪");
+</script>
+
+
+</div>
+
+</body></html>

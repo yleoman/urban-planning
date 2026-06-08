@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>登录 - GY房地产项目经济技术指标计算器</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 100%; min-height: 100%; }
+body {
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+  background: #111827 url('bg.jpg') center/cover no-repeat;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.login-panel {
+  width: min(420px, 100%);
+  padding: 46px 48px;
+  border: 1px solid rgba(255,255,255,0.16);
+  border-radius: 12px;
+  background: rgba(0,0,0,0.08);
+  backdrop-filter: blur(30px);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.3);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+.title {
+  max-width: 360px;
+  font-size: 1.5rem;
+  font-weight: 500;
+  letter-spacing: 4px;
+  line-height: 1.45;
+  text-align: center;
+}
+.subtitle {
+  margin-top: -10px;
+  color: rgba(255,255,255,0.48);
+  font-size: 0.65rem;
+  letter-spacing: 3px;
+  text-align: center;
+}
+.password-input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid rgba(255,255,255,0.24);
+  border-radius: 6px;
+  background: rgba(255,255,255,0.14);
+  color: #fff;
+  font-size: 0.92rem;
+  outline: none;
+  text-align: center;
+  letter-spacing: 2px;
+}
+.password-input::placeholder { color: rgba(255,255,255,0.48); letter-spacing: 1px; }
+.password-input:focus {
+  border-color: rgba(255,255,255,0.58);
+  box-shadow: 0 0 0 3px rgba(255,255,255,0.12);
+}
+.error-msg {
+  min-height: 18px;
+  color: #fecaca;
+  font-size: 0.76rem;
+  text-align: center;
+}
+.enter-btn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  background: #2563eb;
+  color: #fff;
+  font-size: 0.9rem;
+  letter-spacing: 4px;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+.enter-btn:hover { opacity: 0.88; }
+.enter-btn:active { transform: translateY(1px); }
+@media (max-width: 520px) {
+  .login-panel { padding: 38px 28px; }
+  .title { font-size: 1.25rem; }
+}
+</style>
+</head>
+<body>
+<main class="login-panel">
+  <h1 class="title">GY房地产项目经济技术指标计算器</h1>
+  <div class="subtitle">GUI YANG URBAN PLANNING CALCULATOR</div>
+  <input id="loginPassword" class="password-input" type="password" placeholder="请输入密码" autocomplete="current-password">
+  <div id="loginError" class="error-msg"></div>
+  <button class="enter-btn" type="button" onclick="enterApp()">进 入</button>
+</main>
+
+<script>
+var AUTH_KEY = 'guiyang_planning_login_token';
+var LOGIN_PASSWORD = 'gy2026';
+var PASSWORD_EXPIRES_AT = new Date('2026-07-01T23:59:59+08:00').getTime();
+
+function enterApp() {
+  var passwordEl = document.getElementById('loginPassword');
+  var errorEl = document.getElementById('loginError');
+  var password = passwordEl ? passwordEl.value : '';
+  if (Date.now() > PASSWORD_EXPIRES_AT) {
+    if (errorEl) errorEl.textContent = '密码已过期，请联系管理员';
+    if (passwordEl) {
+      passwordEl.value = '';
+      passwordEl.focus();
+    }
+    return;
+  }
+  if (password !== LOGIN_PASSWORD) {
+    if (errorEl) errorEl.textContent = '密码错误，请重新输入';
+    if (passwordEl) {
+      passwordEl.value = '';
+      passwordEl.focus();
+    }
+    return;
+  }
+  var token = Date.now().toString(36) + Math.random().toString(36).slice(2);
+  try {
+    sessionStorage.setItem(AUTH_KEY, token);
+  } catch (e) {}
+  window.location.href = '/?token=' + encodeURIComponent(token);
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') enterApp();
+  if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J')) || (e.ctrlKey && e.key === 'u') || (e.ctrlKey && e.key === 's')) {
+    e.preventDefault();
+    return false;
+  }
+});
+document.addEventListener('contextmenu', function(e) { e.preventDefault(); });
+var loginPasswordInput = document.getElementById('loginPassword');
+if (loginPasswordInput) loginPasswordInput.focus();
+</script>
+</body>
+</html>
